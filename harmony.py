@@ -1590,10 +1590,9 @@ with st.sidebar:
         "BACKEND_URL:",
         bool(BACKEND_URL)
     )
+
 # =========================================================
-
 # API KEY RESOLUTION
-
 # =========================================================
 
 GROQ_API_KEY = FLASHMIND_KEY
@@ -1603,108 +1602,89 @@ OPENROUTER_API_KEY = OMNICORE_KEY
 OPENAI_KEY = OPENAI_API_KEY
 
 # =========================================================
-
 # ENGINE ROUTING
-
 # =========================================================
 
 if engine_type in [
-
-"Flashmind RAG",
-"Flashmind Market"
-
+    "Flashmind RAG",
+    "Flashmind Market"
 ]:
 
-
-ACTIVE_API_KEY = GROQ_API_KEY
+    ACTIVE_API_KEY = GROQ_API_KEY
 
 elif engine_type in [
-
-"Omnicore RAG",
-"Product-R&D-Omni",
-"Product-Optimizations-Omni",
-"Omnicore_Finance"
-
+    "Omnicore RAG",
+    "Product-R&D-Omni",
+    "Product-Optimizations-Omni",
+    "Omnicore_Finance"
 ]:
 
-ACTIVE_API_KEY = OPENROUTER_API_KEY
+    ACTIVE_API_KEY = OPENROUTER_API_KEY
 
 elif engine_type == "OpenAi-GPT":
 
-ACTIVE_API_KEY = OPENAI_KEY
+    ACTIVE_API_KEY = OPENAI_KEY
 
 else:
 
-ACTIVE_API_KEY = ""
+    ACTIVE_API_KEY = ""
 
 # =========================================================
-
 # STATUS DISPLAY
-
 # =========================================================
 
 if engine_type in [
-
-
-"Flashmind RAG",
-"Flashmind Market"
-
+    "Flashmind RAG",
+    "Flashmind Market"
 ]:
 
+    if GROQ_API_KEY:
 
-if GROQ_API_KEY:
+        st.sidebar.success(
+            "✅ Flashmind Connected"
+        )
 
-    st.sidebar.success(
-        "✅ Flashmind Connected"
-    )
+    else:
 
-else:
-
-    st.sidebar.error(
-        "❌ FLASHMIND_KEY Missing"
-    )
+        st.sidebar.error(
+            "❌ FLASHMIND_KEY Missing"
+        )
 
 elif engine_type in [
-
-"Omnicore RAG",
-"Product-R&D-Omni",
-"Product-Optimizations-Omni",
-"Omnicore_Finance"
-
+    "Omnicore RAG",
+    "Product-R&D-Omni",
+    "Product-Optimizations-Omni",
+    "Omnicore_Finance"
 ]:
 
-if OPENROUTER_API_KEY:
+    if OPENROUTER_API_KEY:
 
-    st.sidebar.success(
-        "✅ Omnicore Connected"
-    )
+        st.sidebar.success(
+            "✅ Omnicore Connected"
+        )
 
-else:
+    else:
 
-    st.sidebar.error(
-        "❌ OMNICORE_KEY Missing"
-    )
+        st.sidebar.error(
+            "❌ OMNICORE_KEY Missing"
+        )
 
 elif engine_type == "OpenAi-GPT":
 
+    if OPENAI_KEY:
 
-if OPENAI_KEY:
+        st.sidebar.success(
+            "✅ OpenAI Connected"
+        )
 
-    st.sidebar.success(
-        "✅ OpenAI Connected"
-    )
+    else:
 
-else:
-
-    st.sidebar.error(
-        "❌ OPENAI_API_KEY Missing"
-    )
-
+        st.sidebar.error(
+            "❌ OPENAI_API_KEY Missing"
+        )
 
 # =========================================================
-
-# FINAL VARIABLES
-
+# FINAL SESSION VALUES
 # =========================================================
 
 st.session_state["engine"] = engine_type
@@ -1712,7 +1692,6 @@ st.session_state["engine"] = engine_type
 st.session_state["active_api_key"] = ACTIVE_API_KEY
 
 st.session_state["backend_url"] = BACKEND_URL
-
 
 st.sidebar.header("📧 Email Settings")
 
@@ -3823,7 +3802,13 @@ if st.button("🔍 Run Analysis"):
         )
 
         # === Engine Dispatcher ===
-        if engine_type == "Flashmind RAG":
+        if engine_type == "Offline":
+            result = analyze_with_offline(prompt, offline_choice)
+        elif engine_type == "Qwen-fin":
+            result = analyze_with_qwen(f_prompt, user_priority)    
+        elif engine_type == "Offline RAG":
+            result = analyze_with_offline_rag(prompt)
+        elif engine_type == "Flashmind RAG":
             result = analyze_with_groq(prompt)
         elif engine_type == "Omnicore RAG":
             result = analyze_with_openrouter(prompt)
