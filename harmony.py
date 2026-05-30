@@ -1562,35 +1562,34 @@ BACKEND_URL = st.secrets.get(
 
 with st.sidebar:
 
-st.markdown("---")
+    st.markdown("---")
 
-st.subheader("🔧 System Status")
+    st.subheader("🔧 System Status")
 
-st.write(
-    "Selected Engine:",
-    st.session_state.selected_engine
-)
+    st.write(
+        "Selected Engine:",
+        st.session_state.selected_engine
+    )
 
-st.write(
-    "FLASHMIND_KEY:",
-    bool(FLASHMIND_KEY)
-)
+    st.write(
+        "FLASHMIND_KEY:",
+        bool(FLASHMIND_KEY)
+    )
 
-st.write(
-    "OMNICORE_KEY:",
-    bool(OMNICORE_KEY)
-)
+    st.write(
+        "OMNICORE_KEY:",
+        bool(OMNICORE_KEY)
+    )
 
-st.write(
-    "OPENAI_API_KEY:",
-    bool(OPENAI_API_KEY)
-)
+    st.write(
+        "OPENAI_API_KEY:",
+        bool(OPENAI_API_KEY)
+    )
 
-st.write(
-    "BACKEND_URL:",
-    bool(BACKEND_URL)
-)
-
+    st.write(
+        "BACKEND_URL:",
+        bool(BACKEND_URL)
+    )
 # =========================================================
 
 # API KEY RESOLUTION
