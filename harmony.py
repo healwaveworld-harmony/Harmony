@@ -1615,13 +1615,11 @@ if engine_type in [
 
 ]:
 
-```
+
 ACTIVE_API_KEY = GROQ_API_KEY
-```
 
 elif engine_type in [
 
-```
 "Omnicore RAG",
 "Product-R&D-Omni",
 "Product-Optimizations-Omni",
