@@ -3825,13 +3825,7 @@ if st.button("🔍 Run Analysis"):
         )
 
         # === Engine Dispatcher ===
-        if engine_type == "Offline":
-            result = analyze_with_offline(prompt, offline_choice)
-        elif engine_type == "Qwen-fin":
-            result = analyze_with_qwen(f_prompt, user_priority)    
-        elif engine_type == "Offline RAG":
-            result = analyze_with_offline_rag(prompt)
-        elif engine_type == "Flashmind RAG":
+        if engine_type == "Flashmind RAG":
             result = analyze_with_groq(prompt)
         elif engine_type == "Omnicore RAG":
             result = analyze_with_openrouter(prompt)
