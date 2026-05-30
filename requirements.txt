@@ -1,6 +1,7 @@
 streamlit
 fastapi
 uvicorn
+bcrypt
 aiohttp
 aiofiles
 python-multipart
