@@ -1,0 +1,21 @@
+Harmony AI Desktop
+Copyright (c) 2025 Harmony
+
+Licensed under the Apache License, Version 2.0 (the "License")
+
+Let's create a Harmony in your management and project strategies with your problems and required solutions.   
+
+**Legal Terms:** By submitting this form and using the Harmony application, you agree to:
+        1. This tool is for educational and analytical purposes only.
+        2. The developer (Arjit Chand) and Harmony are not responsible for any damage or loss.
+        3. All intellectual property belongs to Arjit Chand under IPI India.
+        4. Misuse, unauthorized copying, reverse engineering, or sharing is prohibited.
+        5. You consent to usage tracking for anti-duplication and admin control.
+        6. AI-generated suggestions are not legal or medical advice.
+        7. All disputes are to be handled in Jurisdiction: Gurugram Court, India.
+
+© 2025 All Rights Reserved.
+        Harmony-GPT can make mistakes.
+        Powered by Retrieval-augmented generation (RAG)
+        Designed under patent(The patent act-1970 India) theory by owner. (Kindly read consents & readme before using) <br>
+        ("Contact 📱 : whatsapp chat ✔ 8383995759")

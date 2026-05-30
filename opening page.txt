@@ -1,0 +1,13 @@
+ 
+
+"💡 All-in-one Management Assistant, designed under patent theory for Quantified multiple in-depth solution theory, just one ping away\n"
+        "1️⃣ RAG-powered AI with offline + online capability\n"
+        "2️⃣ Multiple input modes (text, file (.txt, .docx, .pdf))\n"
+        "3️⃣ Offline RAG & Online RAG with ZERO-paid-key usage as well\n"
+        "4️⃣ Problem solving techniques (5 why's, Fishbone, SWOT, DMAIC etc) preloaded with Graphs, charts, and visual analytics\n"
+        "5️⃣ *Financial Analysis* module preloaded with P&L and one file upload with ratio analysis, forecasting, and visual reports 📊\n"
+        "6️⃣ Access to the latest 25 models (OpenAI, Gemini, Groq, OpenRouter)\n"
+        "7️⃣ Custom Model addition enabled, add and use new models instantly — no Python needed\n"
+        "8️⃣ All-in-one AI workspace with your personal tweaks, Plan starting with very less amounts compared to various other GPT's 🎯\n"
+        "📞 Contact now on WhatsApp: 8383995759 for full version — SAVE lakhs in paid project planning, strategy, and problem consulting" refer-save more
+
