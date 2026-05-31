@@ -913,16 +913,16 @@ from datetime import datetime
 # =========================================================
 
 if "authenticated" not in st.session_state:
-st.session_state.authenticated = False
+    st.session_state.authenticated = False
 
 if "username" not in st.session_state:
-st.session_state.username = None
+    st.session_state.username = None
 
 if "role" not in st.session_state:
-st.session_state.role = None
+    st.session_state.role = None
 
 if "organization" not in st.session_state:
-st.session_state.organization = None
+    st.session_state.organization = None
 
 # =========================================================
 
