@@ -1138,15 +1138,15 @@ ROLE = st.session_state.role
 
 if ROLE == "admin":
 
-st.sidebar.success(
-    "👑 Admin Access"
-)
-
-elif ROLE == "analyst":
-
-st.sidebar.info(
-    "📊 Manager Access"
-)
+    st.sidebar.success(
+        "👑 Admin Access"
+    )
+    
+    elif ROLE == "analyst":
+    
+    st.sidebar.info(
+        "📊 Manager Access"
+    )
 
 # =========================================================
 
@@ -1155,16 +1155,16 @@ st.sidebar.info(
 # =========================================================
 
 st.sidebar.write(
-f"User: {st.session_state.username}"
-)
-
+    f"User: {st.session_state.username}"
+    )
+    
 st.sidebar.write(
-f"Organization: {st.session_state.organization}"
-)
-
+    f"Organization: {st.session_state.organization}"
+    )
+    
 st.sidebar.write(
-f"Role: {st.session_state.role}"
-)
+    f"Role: {st.session_state.role}"
+    )
 
 # =========================================================
 
