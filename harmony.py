@@ -1174,9 +1174,9 @@ st.sidebar.write(
 
 if st.sidebar.button("Logout"):
 
-st.session_state.clear()
-
-st.rerun()
+    st.session_state.clear()
+    
+    st.rerun()
 
 
  
