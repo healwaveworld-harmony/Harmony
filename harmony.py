@@ -1142,7 +1142,7 @@ if ROLE == "admin":
         "👑 Admin Access"
     )
     
-    elif ROLE == "analyst":
+elif ROLE == "analyst":
     
     st.sidebar.info(
         "📊 Manager Access"
