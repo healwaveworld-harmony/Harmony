@@ -996,19 +996,19 @@ def create_default_users():
 
 def load_users():
 
-try:
-
-    with open(
-        USERS_FILE,
-        "r",
-        encoding="utf-8"
-    ) as f:
-
-        return json.load(f)
-
-except Exception:
-
-    return {"users": []}
+    try:
+    
+        with open(
+            USERS_FILE,
+            "r",
+            encoding="utf-8"
+        ) as f:
+    
+            return json.load(f)
+    
+    except Exception:
+    
+        return {"users": []}
 
 # =========================================================
 # AUTHENTICATION
