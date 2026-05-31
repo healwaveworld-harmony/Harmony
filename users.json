@@ -2,7 +2,7 @@
 "users": [
 {
 "username": "Harmony-Arjit",
-"password_hash": "PASTE_ADMIN_HASH_HERE",
+"password_hash": "GENERATED_ADMIN_HASH",
 "valid_days": 999,
 "role": "admin",
 "organization": "Harmony",
@@ -10,7 +10,7 @@
 },
 {
 "username": "manager01",
-"password_hash": "PASTE_USER_HASH_HERE",
+"password_hash": "GENERATED_MANAGER_HASH",
 "valid_days": 30,
 "role": "analyst",
 "organization": "Harmony",
