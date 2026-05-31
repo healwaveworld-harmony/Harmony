@@ -1069,53 +1069,53 @@ def authenticate_user(
 
 if not st.session_state.authenticated:
 
-st.title("🔐 Harmony Login")
-
-username = st.text_input(
-    "User ID"
-)
-
-password = st.text_input(
-    "Password",
-    type="password"
-)
-
-if st.button("Login"):
-
-    result = authenticate_user(
-        username,
-        password
+    st.title("🔐 Harmony Login")
+    
+    username = st.text_input(
+        "User ID"
     )
-
-    if result == "expired":
-
-        st.error(
-            "Account validity expired"
+    
+    password = st.text_input(
+        "Password",
+        type="password"
+    )
+    
+    if st.button("Login"):
+    
+        result = authenticate_user(
+            username,
+            password
         )
-
-    elif result:
-
-        st.session_state.authenticated = True
-
-        st.session_state.username = result["username"]
-
-        st.session_state.role = result["role"]
-
-        st.session_state.organization = result["organization"]
-
-        st.success(
-            f"Welcome {result['username']}"
-        )
-
-        st.rerun()
-
-    else:
-
-        st.error(
-            "Invalid credentials"
-        )
-
-st.stop()
+    
+        if result == "expired":
+    
+            st.error(
+                "Account validity expired"
+            )
+    
+        elif result:
+    
+            st.session_state.authenticated = True
+    
+            st.session_state.username = result["username"]
+    
+            st.session_state.role = result["role"]
+    
+            st.session_state.organization = result["organization"]
+    
+            st.success(
+                f"Welcome {result['username']}"
+            )
+    
+            st.rerun()
+    
+        else:
+    
+            st.error(
+                "Invalid credentials"
+            )
+    
+    st.stop()
 
 # =========================================================
 
