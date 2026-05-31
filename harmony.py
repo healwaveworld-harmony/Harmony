@@ -892,254 +892,294 @@ consent_accepted = st.checkbox(
 
 
 # =========================================================
-# HARMONY STREAMLIT CLOUD AUTH SYSTEM
-# users.json based
+
+# HARMONY USERS.JSON AUTH SYSTEM
+
+# ADMIN + ANALYST ONLY
+
 # =========================================================
 
 import json
 import bcrypt
 import streamlit as st
 
+from pathlib import Path
+from datetime import datetime
+
 # =========================================================
+
 # SESSION DEFAULTS
+
 # =========================================================
 
 if "authenticated" not in st.session_state:
-    st.session_state.authenticated = False
+st.session_state.authenticated = False
 
 if "username" not in st.session_state:
-    st.session_state.username = None
+st.session_state.username = None
 
 if "role" not in st.session_state:
-    st.session_state.role = "viewer"
+st.session_state.role = None
 
 if "organization" not in st.session_state:
-    st.session_state.organization = "Harmony"
+st.session_state.organization = None
 
-import json
-import bcrypt
-from pathlib import Path
+# =========================================================
+
+# USERS FILE
+
+# =========================================================
 
 USERS_FILE = Path("users.json")
 
+# =========================================================
+
+# CREATE DEFAULT USERS
+
+# =========================================================
+
 def create_default_users():
 
-    if USERS_FILE.exists():
-        return
+if USERS_FILE.exists():
+    return
 
-    users = {
-        "users": [
-            {
-                "username": "admin",
-                "password_hash": bcrypt.hashpw(
-                    "Harmony@123".encode(),
-                    bcrypt.gensalt()
-                ).decode(),
-                "role": "admin",
-                "organization": "Harmony"
-            },
+users = {
+    "users": [
 
-            {
-                "username": "user01",
-                "password_hash": bcrypt.hashpw(
-                    "Europe@123".encode(),
-                    bcrypt.gensalt()
-                ).decode(),
-                "role": "analyst",
-                "organization": "Europe"
-            },
+        {
+            "username": "Harmony-Arjit",
+            "password_hash": bcrypt.hashpw(
+                "Harmony_Arjit@123".encode(),
+                bcrypt.gensalt()
+            ).decode(),
+            "valid_days": 999,
+            "role": "admin",
+            "organization": "Harmony",
+            "created_at": "2026-05-31"
+        },
 
-            {
-                "username": "user02",
-                "password_hash": bcrypt.hashpw(
-                    "China@123".encode(),
-                    bcrypt.gensalt()
-                ).decode(),
-                "role": "analyst",
-                "organization": "China"
-            }
-        ]
-    }
+        {
+            "username": "manager01",
+            "password_hash": bcrypt.hashpw(
+                "Europe@123".encode(),
+                bcrypt.gensalt()
+            ).decode(),
+            "valid_days": 30,
+            "role": "analyst",
+            "organization": "Harmony",
+            "created_at": "2026-05-31"
+        }
 
-    with open(
-        USERS_FILE,
-        "w",
-        encoding="utf-8"
-    ) as f:
+    ]
+}
 
-        json.dump(
-            users,
-            f,
-            indent=4
-        )
+with open(
+    USERS_FILE,
+    "w",
+    encoding="utf-8"
+) as f:
+
+    json.dump(
+        users,
+        f,
+        indent=4
+    )
 
 create_default_users()
 
 # =========================================================
-# USERS.JSON LOADER
-# =========================================================
 
-USERS_FILE = "users.json"
+# LOAD USERS
+
+# =========================================================
 
 def load_users():
 
-    try:
+try:
 
-        with open(
-            USERS_FILE,
-            "r",
-            encoding="utf-8"
-        ) as f:
+    with open(
+        USERS_FILE,
+        "r",
+        encoding="utf-8"
+    ) as f:
 
-            return json.load(f)
+        return json.load(f)
 
-    except:
+except Exception:
 
-        return {"users": []}
+    return {"users": []}
 
 # =========================================================
+
 # AUTHENTICATION
+
 # =========================================================
 
 def authenticate_user(
-    username,
-    password
+username,
+password
 ):
 
-    users_data = load_users()
+users_data = load_users()
 
-    for user in users_data["users"]:
+for user in users_data["users"]:
 
-        if user["username"] == username:
+    if user["username"] != username:
+        continue
 
-            try:
+    try:
 
-                if bcrypt.checkpw(
-                    password.encode(),
-                    user["password_hash"].encode()
-                ):
+        if not bcrypt.checkpw(
+            password.encode(),
+            user["password_hash"].encode()
+        ):
+            continue
 
-                    return user
+        created_date = datetime.strptime(
+            user["created_at"],
+            "%Y-%m-%d"
+        )
 
-            except:
+        valid_days = int(
+            user.get(
+                "valid_days",
+                999
+            )
+        )
 
-                pass
+        age_days = (
+            datetime.now() -
+            created_date
+        ).days
 
-    return None
+        if age_days > valid_days:
+            return "expired"
+
+        return user
+
+    except Exception:
+        continue
+
+return None
 
 # =========================================================
+
 # LOGIN SCREEN
+
 # =========================================================
 
 if not st.session_state.authenticated:
 
-    st.title("🔐 Harmony Login")
+st.title("🔐 Harmony Login")
 
-    username = st.text_input(
-        "User ID"
+username = st.text_input(
+    "User ID"
+)
+
+password = st.text_input(
+    "Password",
+    type="password"
+)
+
+if st.button("Login"):
+
+    result = authenticate_user(
+        username,
+        password
     )
 
-    password = st.text_input(
-        "Password",
-        type="password"
-    )
+    if result == "expired":
 
-    if st.button("Login"):
-
-        user = authenticate_user(
-            username,
-            password
+        st.error(
+            "Account validity expired"
         )
 
-        if user:
+    elif result:
 
-            st.session_state.authenticated = True
+        st.session_state.authenticated = True
 
-            st.session_state.username = user["username"]
+        st.session_state.username = result["username"]
 
-            st.session_state.role = user.get(
-                "role",
-                "viewer"
-            )
+        st.session_state.role = result["role"]
 
-            st.session_state.organization = user.get(
-                "organization",
-                "Harmony"
-            )
+        st.session_state.organization = result["organization"]
 
-            st.success(
-                f"Welcome {username}"
-            )
+        st.success(
+            f"Welcome {result['username']}"
+        )
 
-            st.rerun()
+        st.rerun()
 
-        else:
+    else:
 
-            st.error(
-                "Invalid credentials"
-            )
+        st.error(
+            "Invalid credentials"
+        )
 
-    st.stop()
+st.stop()
 
 # =========================================================
+
 # ACTIVE USER
+
 # =========================================================
 
 USER = {
-
-    "email": st.session_state.username,
-
-    "identity": st.session_state.organization
-
+"email": st.session_state.username,
+"identity": st.session_state.organization
 }
 
 ROLE = st.session_state.role
 
 # =========================================================
+
 # ROLE ACCESS
+
 # =========================================================
 
 if ROLE == "admin":
 
-    st.sidebar.success(
-        "👑 Admin Access"
-    )
+st.sidebar.success(
+    "👑 Admin Access"
+)
 
 elif ROLE == "analyst":
 
-    st.sidebar.info(
-        "📊 Analyst Access"
-    )
-
-else:
-
-    st.sidebar.warning(
-        "👁️ View Only"
-    )
+st.sidebar.info(
+    "📊 Manager Access"
+)
 
 # =========================================================
+
 # USER INFO
+
 # =========================================================
 
 st.sidebar.write(
-    f"User: {st.session_state.username}"
+f"User: {st.session_state.username}"
 )
 
 st.sidebar.write(
-    f"Organization: {st.session_state.organization}"
+f"Organization: {st.session_state.organization}"
+)
+
+st.sidebar.write(
+f"Role: {st.session_state.role}"
 )
 
 # =========================================================
+
 # LOGOUT
+
 # =========================================================
 
-if st.sidebar.button(
-    "Logout"
-):
+if st.sidebar.button("Logout"):
 
-    st.session_state.clear()
+st.session_state.clear()
 
-    st.rerun()
+st.rerun()
+
+
  
 import smtplib
 import requests
@@ -1666,10 +1706,14 @@ from typing import List
 
 
 # === API Config & Daily Limits ===
-GOOGLE_API_KEYS = st.secrets(
-    "GOOGLE_API_KEYS"
-).split(",")
-
+GOOGLE_API_KEYS = [
+    k.strip()
+    for k in st.secrets.get(
+        "GOOGLE_API_KEYS",
+        ""
+    ).split(",")
+    if k.strip()
+]
 GOOGLE_CSE_ID = "236166c7fd4994632"
 GOOGLE_DAILY_LIMIT = 30
 
@@ -1807,7 +1851,7 @@ def build_f_prompt(user_comment, doer_comment, final_input, model_type, user_pri
             "6. Valuation Analysis – intrinsic value (DCF, comparable company analysis) with investment insights.\n"
             "7. Qualitative & Contextual Insights – MD&A, industry/economic factors, risk assessment, notes/disclosures.\n"
             "8. Forward-Looking Guidance – forecasts, projections, and actionable recommendations for operational improvements.\n"
-            "9. Suggestions & Recommendations (latest-2026) for Major Changes – highlight critical areas needing attention.\n"
+            "9. Suggestions & Recommendations (latest-2025) for Major Changes – highlight critical areas needing attention.\n"
             "10. Visual Aids & Data Visualization – propose tables, charts, and dashboards for clarity.\n\n"
             "Use headings, subheadings, bullet points, numeric examples, and tables. "
             "Ensure clarity, depth, and actionable insights.\n\n"
@@ -1831,7 +1875,7 @@ def build_f_prompt(user_comment, doer_comment, final_input, model_type, user_pri
             "6. Valuation Analysis – intrinsic value (DCF, comparable company analysis) with strategic insights.\n"
             "7. Qualitative & Contextual Insights – MD&A, industry/economic factors, risk assessment, notes/disclosures.\n"
             "8. Forward-Looking Guidance – projections and actionable recommendations for strategic decision-making.\n"
-            "9. Suggestions & Recommendations for Major Changes (latest-2026) – highlight critical areas needing attention.\n"
+            "9. Suggestions & Recommendations for Major Changes (latest-2025) – highlight critical areas needing attention.\n"
             "10. Visual Aids & Data Visualization – propose tables, charts, and dashboards to enhance comprehension.\n\n"
             "Use headings, subheadings, bullet points, numeric examples, and tables. "
             "Ensure clarity, depth, and actionable insights.\n\n"
@@ -1858,7 +1902,7 @@ def build_prompt(user, doer, input_text, model, prio, online_mode: bool = True):
     refs_md = "\n".join([f"- [{url}]({url})" for url in refs])
 
     definition_section = f"""
-Definition of **{input_text}** with authoritative insights (focus on 2026 strategies):
+Definition of **{input_text}** with authoritative insights (focus on 2025 strategies):
 
 References (auto-expand with text/images if available):  
 {refs_md}
@@ -1884,7 +1928,7 @@ SCOPE & DEPTH REQUIREMENTS (MANDATORY)
   - Engineering principles (design, manufacturing, validation, lifecycle)
 - Quantify impacts wherever possible
 - Link technical failures to **business, safety, and financial consequences**
-- Use **2026–2026 industry practices only**
+- Use **2025–2026 industry practices only**
 
 
 DELIVERABLE STRUCTURE (STRICT)
@@ -1940,7 +1984,7 @@ Include explicit headings for visualization tools:
 - Testing & validation improvements
 - Service and maintenance interventions
 
-7. IMPLEMENTABLE INDUSTRY EXAMPLES (2026–2026)
+7. IMPLEMENTABLE INDUSTRY EXAMPLES (2025–2026)
 
 - Cite **Top 5 customers / OEMs / industries** that faced similar issues
 - Explain:
@@ -2129,7 +2173,7 @@ X. Conclusion
 XI. Appendices
   A. Supporting data and charts
   B. Glossary of terms
-  C. References and sources used in the analysis Current Year 2026 
+  C. References and sources used in the analysis Current Year 2025 
 """
 
     # --- Definition/References Section ---
@@ -2781,7 +2825,7 @@ The summary must include the following sections:
 
 1. KEY INSIGHTS  
    - Critical observations derived from the analysis  
-   - Supporting data points and examples relevant to 2024–2026  
+   - Supporting data points and examples relevant to 2024–2025  
 
 2. RECOMMENDED ACTION POINTS  
    - Clearly defined, practical, and prioritized actions  
@@ -2962,8 +3006,8 @@ DELIVERABLE REQUIREMENTS
      - Clear textual chart descriptions suitable for rendering  
    - Ensure numeric or percentage values are provided where charts are suggested  
 
-5. AUTHORITATIVE CONTEXT (2026)  
-   - Reference credible, authoritative insights relevant to the year 2026  
+5. AUTHORITATIVE CONTEXT (2025)  
+   - Reference credible, authoritative insights relevant to the year 2025  
    - Contextualize references to support conclusions and recommendations  
 
 OUTPUT RULES
@@ -3475,7 +3519,7 @@ def analyze_with_openai_deepseek(prompt):
                         Manufacturing efficiency advantages
                         Cost advantages or disadvantages
                         Technology gaps and improvement opportunities
-            Latest industry trends (2026–2026)
+            Latest industry trends (2025–2026)
                         Automation and smart manufacturing trends
                         Industry 4.0 integration
                         Robotics and AI-driven manufacturing trends
@@ -3492,7 +3536,7 @@ def analyze_with_openai_deepseek(prompt):
             Factory setup investment vs ROI analysis
                         Estimated ROI timelines
                         Production volume vs profitability analysis
-            Relevant company or industry examples (2026–2026)
+            Relevant company or industry examples (2025–2026)
                         Indian manufacturers
                         Global manufacturers
                         OEM and Tier-1 supplier manufacturing practices
