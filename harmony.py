@@ -56,9 +56,6 @@ import bcrypt
 FLASHMIND_KEY = st.secrets["FLASHMIND_KEY"]
 OMNICORE_KEY = st.secrets["OMNICORE_KEY"]
 
-SMTP_EMAIL = st.secrets["SMTP_EMAIL"]
-SMTP_PASSWORD = st.secrets["SMTP_PASSWORD"]
-
 DEFAULT_FROM = st.secrets["DEFAULT_FROM"]
 
 
@@ -1887,7 +1884,7 @@ def build_f_prompt(user_comment, doer_comment, final_input, model_type, user_pri
             "6. Valuation Analysis – intrinsic value (DCF, comparable company analysis) with investment insights.\n"
             "7. Qualitative & Contextual Insights – MD&A, industry/economic factors, risk assessment, notes/disclosures.\n"
             "8. Forward-Looking Guidance – forecasts, projections, and actionable recommendations for operational improvements.\n"
-            "9. Suggestions & Recommendations (latest-2025) for Major Changes – highlight critical areas needing attention.\n"
+            "9. Suggestions & Recommendations (latest-2026) for Major Changes – highlight critical areas needing attention.\n"
             "10. Visual Aids & Data Visualization – propose tables, charts, and dashboards for clarity.\n\n"
             "Use headings, subheadings, bullet points, numeric examples, and tables. "
             "Ensure clarity, depth, and actionable insights.\n\n"
@@ -1911,7 +1908,7 @@ def build_f_prompt(user_comment, doer_comment, final_input, model_type, user_pri
             "6. Valuation Analysis – intrinsic value (DCF, comparable company analysis) with strategic insights.\n"
             "7. Qualitative & Contextual Insights – MD&A, industry/economic factors, risk assessment, notes/disclosures.\n"
             "8. Forward-Looking Guidance – projections and actionable recommendations for strategic decision-making.\n"
-            "9. Suggestions & Recommendations for Major Changes (latest-2025) – highlight critical areas needing attention.\n"
+            "9. Suggestions & Recommendations for Major Changes (latest-2026) – highlight critical areas needing attention.\n"
             "10. Visual Aids & Data Visualization – propose tables, charts, and dashboards to enhance comprehension.\n\n"
             "Use headings, subheadings, bullet points, numeric examples, and tables. "
             "Ensure clarity, depth, and actionable insights.\n\n"
@@ -1938,7 +1935,7 @@ def build_prompt(user, doer, input_text, model, prio, online_mode: bool = True):
     refs_md = "\n".join([f"- [{url}]({url})" for url in refs])
 
     definition_section = f"""
-Definition of **{input_text}** with authoritative insights (focus on 2025 strategies):
+Definition of **{input_text}** with authoritative insights (focus on 2026 strategies):
 
 References (auto-expand with text/images if available):  
 {refs_md}
@@ -1964,7 +1961,7 @@ SCOPE & DEPTH REQUIREMENTS (MANDATORY)
   - Engineering principles (design, manufacturing, validation, lifecycle)
 - Quantify impacts wherever possible
 - Link technical failures to **business, safety, and financial consequences**
-- Use **2025–2026 industry practices only**
+- Use **2026–2026 industry practices only**
 
 
 DELIVERABLE STRUCTURE (STRICT)
@@ -2020,7 +2017,7 @@ Include explicit headings for visualization tools:
 - Testing & validation improvements
 - Service and maintenance interventions
 
-7. IMPLEMENTABLE INDUSTRY EXAMPLES (2025–2026)
+7. IMPLEMENTABLE INDUSTRY EXAMPLES (2026–2026)
 
 - Cite **Top 5 customers / OEMs / industries** that faced similar issues
 - Explain:
@@ -2209,7 +2206,7 @@ X. Conclusion
 XI. Appendices
   A. Supporting data and charts
   B. Glossary of terms
-  C. References and sources used in the analysis Current Year 2025 
+  C. References and sources used in the analysis Current Year 2026 
 """
 
     # --- Definition/References Section ---
@@ -2861,7 +2858,7 @@ The summary must include the following sections:
 
 1. KEY INSIGHTS  
    - Critical observations derived from the analysis  
-   - Supporting data points and examples relevant to 2024–2025  
+   - Supporting data points and examples relevant to 2024–2026  
 
 2. RECOMMENDED ACTION POINTS  
    - Clearly defined, practical, and prioritized actions  
@@ -3042,8 +3039,8 @@ DELIVERABLE REQUIREMENTS
      - Clear textual chart descriptions suitable for rendering  
    - Ensure numeric or percentage values are provided where charts are suggested  
 
-5. AUTHORITATIVE CONTEXT (2025)  
-   - Reference credible, authoritative insights relevant to the year 2025  
+5. AUTHORITATIVE CONTEXT (2026)  
+   - Reference credible, authoritative insights relevant to the year 2026  
    - Contextualize references to support conclusions and recommendations  
 
 OUTPUT RULES
@@ -3555,7 +3552,7 @@ def analyze_with_openai_deepseek(prompt):
                         Manufacturing efficiency advantages
                         Cost advantages or disadvantages
                         Technology gaps and improvement opportunities
-            Latest industry trends (2025–2026)
+            Latest industry trends (2026–2026)
                         Automation and smart manufacturing trends
                         Industry 4.0 integration
                         Robotics and AI-driven manufacturing trends
@@ -3572,7 +3569,7 @@ def analyze_with_openai_deepseek(prompt):
             Factory setup investment vs ROI analysis
                         Estimated ROI timelines
                         Production volume vs profitability analysis
-            Relevant company or industry examples (2025–2026)
+            Relevant company or industry examples (2026–2026)
                         Indian manufacturers
                         Global manufacturers
                         OEM and Tier-1 supplier manufacturing practices
@@ -3907,7 +3904,7 @@ st.markdown(
     """
     <hr style="margin-top: 40px; margin-bottom: 10px;">
     <div style="text-align: center; font-size: 13px; color: gray;">
-        © 2025 All Rights Reserved.<br>
+        © 2026 All Rights Reserved.<br>
         Harmony-GPT can make mistakes.<br>
         Powered by Retrieval-augmented generation (RAG)
         Designed under patent theory by owner. (Kindly read consents & readme before using) <br>
