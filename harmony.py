@@ -1015,51 +1015,51 @@ def load_users():
 # =========================================================
 
 def authenticate_user(
-username,
-password
-):
-
-users_data = load_users()
-
-for user in users_data["users"]:
-
-    if user["username"] != username:
-        continue
-
-    try:
-
-        if not bcrypt.checkpw(
-            password.encode(),
-            user["password_hash"].encode()
-        ):
+    username,
+    password
+    ):
+    
+    users_data = load_users()
+    
+    for user in users_data["users"]:
+    
+        if user["username"] != username:
             continue
-
-        created_date = datetime.strptime(
-            user["created_at"],
-            "%Y-%m-%d"
-        )
-
-        valid_days = int(
-            user.get(
-                "valid_days",
-                999
+    
+        try:
+    
+            if not bcrypt.checkpw(
+                password.encode(),
+                user["password_hash"].encode()
+            ):
+                continue
+    
+            created_date = datetime.strptime(
+                user["created_at"],
+                "%Y-%m-%d"
             )
-        )
-
-        age_days = (
-            datetime.now() -
-            created_date
-        ).days
-
-        if age_days > valid_days:
-            return "expired"
-
-        return user
-
-    except Exception:
-        continue
-
-return None
+    
+            valid_days = int(
+                user.get(
+                    "valid_days",
+                    999
+                )
+            )
+    
+            age_days = (
+                datetime.now() -
+                created_date
+            ).days
+    
+            if age_days > valid_days:
+                return "expired"
+    
+            return user
+    
+        except Exception:
+            continue
+    
+    return None
 
 # =========================================================
 
