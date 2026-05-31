@@ -940,52 +940,52 @@ USERS_FILE = Path("users.json")
 
 def create_default_users():
 
-if USERS_FILE.exists():
-    return
-
-users = {
-    "users": [
-
-        {
-            "username": "Harmony-Arjit",
-            "password_hash": bcrypt.hashpw(
-                "Harmony_Arjit@123".encode(),
-                bcrypt.gensalt()
-            ).decode(),
-            "valid_days": 999,
-            "role": "admin",
-            "organization": "Harmony",
-            "created_at": "2026-05-31"
-        },
-
-        {
-            "username": "manager01",
-            "password_hash": bcrypt.hashpw(
-                "Europe@123".encode(),
-                bcrypt.gensalt()
-            ).decode(),
-            "valid_days": 30,
-            "role": "analyst",
-            "organization": "Harmony",
-            "created_at": "2026-05-31"
-        }
-
-    ]
-}
-
-with open(
-    USERS_FILE,
-    "w",
-    encoding="utf-8"
-) as f:
-
-    json.dump(
-        users,
-        f,
-        indent=4
-    )
-
-create_default_users()
+    if USERS_FILE.exists():
+        return
+    
+    users = {
+        "users": [
+    
+            {
+                "username": "Harmony-Arjit",
+                "password_hash": bcrypt.hashpw(
+                    "Harmony_Arjit@123".encode(),
+                    bcrypt.gensalt()
+                ).decode(),
+                "valid_days": 999,
+                "role": "admin",
+                "organization": "Harmony",
+                "created_at": "2026-05-31"
+            },
+    
+            {
+                "username": "manager01",
+                "password_hash": bcrypt.hashpw(
+                    "Europe@123".encode(),
+                    bcrypt.gensalt()
+                ).decode(),
+                "valid_days": 30,
+                "role": "analyst",
+                "organization": "Harmony",
+                "created_at": "2026-05-31"
+            }
+    
+        ]
+    }
+    
+    with open(
+        USERS_FILE,
+        "w",
+        encoding="utf-8"
+    ) as f:
+    
+        json.dump(
+            users,
+            f,
+            indent=4
+        )
+    
+    create_default_users()
 
 
 # =========================================================
