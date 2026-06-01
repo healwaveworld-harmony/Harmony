@@ -2118,7 +2118,7 @@ IX. Market Forecast & Sales
   A. Projection of Actual current market size with references and growth in the short and long term
   B. Analysis of factors influencing the market forecast
   C. Estimation of market demand and sales potential
-  D. How to get more clients and easy channel to approach and top 10 customers with consumptions to approach 
+  D. How to get more clients and easy channel to approach and top 10 customers with consumptions to approach with contacts, phone number and email ID's.
   E. reports and leads and links for sales which can be fetched to explore sales business opportunity and reach to make customers with top 5 industries and 6 -7 clents each of industry potential clients
 X. Conclusion
   A. Summary of the key findings from the market analysis
@@ -2126,7 +2126,7 @@ X. Conclusion
 XI. Appendices
   A. Supporting data and charts
   B. Glossary of terms
-  C. References and sources used in the analysis Current Year 2025 
+  C. References and sources used in the analysis Current Year 2026
 """
 
     # --- Definition/References Section ---
@@ -2858,7 +2858,7 @@ def analyze_with_groq_market_analysis(m_prompt):
                         "https://api.groq.com/openai/v1/chat/completions",
                         headers=headers,
                         json={
-                            "model": "openai/gpt-oss-20b",
+                            "model": "openai/gpt-oss-120b",
                             "messages": [{"role": "user", "content": payload_prompt}],
                             "temperature": 0.1
                         },
