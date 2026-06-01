@@ -2614,17 +2614,17 @@ SYSTEM INSTRUCTIONS:
 Provide a single, comprehensive STRATEGIC ANALYSIS following this exact structure:
 
 1. SYNTHESIZED INSIGHTS
-   - Integrate deep market findings and quantified data points.
-   - Highlight critical converging and diverging observations.
+   - Integrate deep market findings and quantified data points 2026.
+   - Highlight critical converging and diverging observations 2026.
 
 2. RECOMMENDED ACTIONS
-   - Clearly prioritized actions with practical, implementable steps.
+   - Clearly prioritized actions with practical, implementable steps 2026.
 
 3. 2026-ALIGNED STRATEGIC VIEW
    - Key trends relevant to 2026, risks, and strategic implications.
 
 4. USER VS DOER PERSPECTIVES
-   - Explicit comparison of viewpoints and areas of alignment/conflict.
+   - Explicit comparison of viewpoints and areas of alignment/conflict 2026.
 
 5. SUGGESTED VISUALS
    - Recommended charts (bar, pie, trend) and tables for comparisons.
