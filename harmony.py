@@ -3317,12 +3317,26 @@ def analyze_with_openai_deepseek(prompt):
     """
 
     import streamlit as st
+    import requests
     import time
 
     try:
+        # ------------ RESOLVE API KEY FROM UNIFIED STATE ------------
+        # Fixes KeyError by targeting the exact state keys initialized in your layout UI script
+        openrouter_key = st.session_state.get('openrouter_api_key', '')
+        
+        if not openrouter_key:
+            api_keys = st.session_state.get('api_key_column', {})
+            # Check both possible fallback slots from layout variations
+            openrouter_key = api_keys.get('openrouter', api_keys.get('openrouter_fin', ''))
+
+        if not openrouter_key:
+            st.error("❌ Omnicore API Key Missing. Please configure credentials.")
+            return "Analysis failed. Missing API Key."
+
         # ------------ HEADERS ------------
         OPENROUTER_HEADERS = {
-            "Authorization": f"Bearer {api_key_column['openrouter_fin']}",
+            "Authorization": f"Bearer {openrouter_key}",
             "Content-Type": "application/json",
             "HTTP-Referer": "http://localhost",
             "X-Title": "Engineering Analyzer"
@@ -3436,7 +3450,7 @@ def analyze_with_openai_deepseek(prompt):
                         Manufacturing efficiency advantages
                         Cost advantages or disadvantages
                         Technology gaps and improvement opportunities
-            Latest industry trends (2025–2026)
+                        Latest industry trends (2025–2026)
                         Automation and smart manufacturing trends
                         Industry 4.0 integration
                         Robotics and AI-driven manufacturing trends
@@ -3498,7 +3512,6 @@ ENGINEERING QUERY:
 
         # ------------ REQUEST FUNCTION (same as Gemini) ------------
         def call_openrouter(model_name, prompt_text, timeout=120, retries=2):
-
             for attempt in range(retries):
                 try:
                     # ⭐ EXACT SAME POST BLOCK USED IN GEMINI ⭐
@@ -3557,7 +3570,8 @@ ENGINEERING QUERY:
         }
 
         try:
-            render_charts_from_ai_output(final_output)
+            if 'render_charts_from_ai_output' in globals():
+                render_charts_from_ai_output(final_output)
         except Exception as e:
             st.warning(f"Chart rendering skipped: {e}")
 
