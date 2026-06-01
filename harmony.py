@@ -3059,8 +3059,23 @@ def analyze_with_openai(o_prompt):
     Retries and fallback handled internally.
     Returns output text only.
     """
+    import streamlit as st
+    import requests
+    import time
+
+    # --- Securely Pull API Key from Global Context ---
+    openrouter_key = st.session_state.get('openrouter_api_key', '')
+    
+    if not openrouter_key:
+        api_keys = st.session_state.get('api_key_column', {})
+        openrouter_key = api_keys.get('openrouter', '')
+
+    if not openrouter_key:
+        st.error("❌ Omnicore API Key Missing. Configure credentials to run analysis.")
+        return "Omnicore analysis failed: Missing API Key."
+
     headers = {
-        "Authorization": f"Bearer {api_key_column['openrouter']}",
+        "Authorization": f"Bearer {openrouter_key}",
         "Content-Type": "application/json",
         "HTTP-Referer": "http://localhost",
         "X-Title": "Engineering Analyzer"
@@ -3069,6 +3084,11 @@ def analyze_with_openai(o_prompt):
     retries = 2
     timeout = 120
 
+    # --- Pre-emptive Context Optimization Patch ---
+    # Slices payload footprint to prevent 413 error drops
+    safe_prompt = o_prompt[:20000] if len(o_prompt) > 20000 else o_prompt
+
+    # Loop exactly through your user-defined global list
     for model in ANALYSIS_FALLBACK_MODELS:
         for attempt in range(retries):
             try:
@@ -3077,11 +3097,17 @@ def analyze_with_openai(o_prompt):
                     headers=headers,
                     json={
                         "model": model,
-                        "messages": [{"role": "user", "content": o_prompt}],
+                        "messages": [{"role": "user", "content": safe_prompt}],
                         "max_tokens": 2500
                     },
                     timeout=timeout
                 )
+
+                # Catch payload size drop and optimize on the fly
+                if resp.status_code == 413:
+                    st.warning("⚠️ High volume dataset detected. Optimizing context boundaries...")
+                    safe_prompt = o_prompt[:12000] + "\n\n[...Context window compressed for model performance...]"
+                    continue
 
                 if resp.status_code != 200:
                     raise RuntimeError(f"Engine response error: {resp.status_code}")
@@ -3093,14 +3119,16 @@ def analyze_with_openai(o_prompt):
                 ).strip()
 
                 if output:
-                    # Optional chart rendering
+                    # Optional chart rendering pipeline execution hook
                     try:
-                        render_charts_from_ai_output(output)
+                        if 'render_charts_from_ai_output' in globals():
+                            render_charts_from_ai_output(output)
                     except Exception:
                         st.warning("Chart rendering skipped.")
+                    
                     return output
 
-            except Exception:
+            except Exception as e:
                 if attempt < retries - 1:
                     st.warning("⏳ Retrying optimized Omnicore engines…")
                     time.sleep(5)
@@ -3109,7 +3137,6 @@ def analyze_with_openai(o_prompt):
 
     st.error("⚠️ Optimized Omnicore engines unavailable.")
     return "Omnicore analysis failed."
-
 
 # =====================================================
 # USAGE EXAMPLE
