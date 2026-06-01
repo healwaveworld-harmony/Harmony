@@ -1464,52 +1464,112 @@ model_type = st.sidebar.selectbox("📘 Select Problem-Solving Methodology", [
 
 import streamlit as st
 
+# =========================================================
+# ENGINE SELECTION
+# =========================================================
+
 engine_type = st.sidebar.selectbox(
-"🧠 Choose AI Engine",
-[
-"Offline",
-"Qwen-fin",
-"Offline RAG",
-"Flashmind RAG",
-"Omnicore RAG",
-"Flashmind Market",
-"OpenAi-GPT",
-"Product-R&D-Omni",
-"Product-Optimizations-Omni",
-"Omnicore_Finance"
-]
+    "🧠 Choose AI Engine",
+    [
+        "Offline",
+        "Qwen-fin",
+        "Offline RAG",
+        "Flashmind RAG",
+        "Omnicore RAG",
+        "Flashmind Market",
+        "OpenAi-GPT",
+        "Product-R&D-Omni",
+        "Product-Optimizations-Omni",
+        "Omnicore_Finance"
+    ]
 )
 
 st.session_state.selected_engine = engine_type
+
+# =========================================================
+# DEBUG (Using st.secrets now)
+# =========================================================
+
+st.sidebar.write(
+    "Selected Engine:",
+    st.session_state.selected_engine
+)
+
+st.sidebar.write(
+    "OMNICORE_KEY Loaded from Secrets:",
+    "OMNICORE_KEY" in st.secrets
+)
+
+st.sidebar.write(
+    "FLASHMIND_KEY Loaded from Secrets:",
+    "FLASHMIND_KEY" in st.secrets
+)
+
+st.sidebar.write(
+    "BACKEND_URL Loaded from Secrets:",
+    "BACKEND_URL" in st.secrets
+)
+
+# =========================================================
+# DEFAULT KEYS FROM st.secrets
+# =========================================================
 
 DEFAULT_GROQ_KEY = st.secrets.get("FLASHMIND_KEY", "")
 DEFAULT_OPENROUTER_KEY = st.secrets.get("OMNICORE_KEY", "")
 DEFAULT_BACKEND_URL = st.secrets.get("BACKEND_URL", "")
 
+# =========================================================
+# API KEY UI & FALLBACK LOGIC
+# =========================================================
+
+groq_ui_key = ""
+openrouter_ui_key = ""
 api_key_column = {}
+engine = st.session_state.selected_engine
 
-if engine_type in ["Flashmind RAG", "Flashmind Market"]:
+# FLASHMIND = GROQ
+if engine in ["Flashmind RAG", "Flashmind Market"]:
+    groq_ui_key = st.sidebar.text_input(
+        "Flashmind API Key (Optional Override)",
+        type="password",
+        key="flashmind_api_key"
+    )
+    
+    # If UI text input is not empty, use it. Otherwise, bypass with st.secrets.
+    api_key_column["groq_key"] = (
+        groq_ui_key.strip()
+        if groq_ui_key.strip()
+        else DEFAULT_GROQ_KEY
+    )
 
-api_key_column["groq_key"] = st.sidebar.text_input(
-    "Flashmind API Key (Optional Override)",
-    type="password",
-    key="flashmind_api_key"
-).strip() or DEFAULT_GROQ_KEY
-
-elif engine_type in [
-"Omnicore RAG",
-"OpenAi-GPT",
-"Product-R&D-Omni",
-"Product-Optimizations-Omni",
-"Omnicore_Finance"
+# OMNICORE = OPENROUTER
+elif engine in [
+    "Omnicore RAG",
+    "OpenAi-GPT",
+    "Product-R&D-Omni",
+    "Product-Optimizations-Omni",
+    "Omnicore_Finance"
 ]:
+    openrouter_ui_key = st.sidebar.text_input(
+        "Omnicore API Key (Optional Override)",
+        type="password",
+        key="omnicore_api_key"
+    )
+    
+    # If UI text input is not empty, use it. Otherwise, bypass with st.secrets.
+    api_key_column["openrouter"] = (
+        openrouter_ui_key.strip()
+        if openrouter_ui_key.strip()
+        else DEFAULT_OPENROUTER_KEY
+    )
 
-api_key_column["openrouter"] = st.sidebar.text_input(
-    "Omnicore API Key (Optional Override)",
-    type="password",
-    key="omnicore_api_key"
-).strip() or DEFAULT_OPENROUTER_KEY
+# OFFLINE / LOCAL ENGINES
+else:
+    api_key_column = {}
 
+# =========================================================
+# FINAL RESOLVED KEYS
+# =========================================================
 
 GROQ_API_KEY = api_key_column.get("groq_key", "")
 OPENROUTER_API_KEY = api_key_column.get("openrouter", "")
@@ -1521,7 +1581,33 @@ st.session_state["backend_url"] = DEFAULT_BACKEND_URL
 
 BACKEND_URL = DEFAULT_BACKEND_URL
 
+# =========================================================
+# STATUS ALERTS
+# =========================================================
 
+if GROQ_API_KEY:
+    st.sidebar.success("✅ Flashmind Key Loaded")
+
+if OPENROUTER_API_KEY:
+    st.sidebar.success("✅ Omnicore Key Loaded")
+
+if (
+    not GROQ_API_KEY
+    and engine in ["Flashmind RAG", "Flashmind Market"]
+):
+    st.sidebar.error("❌ Flashmind Key Missing")
+
+if (
+    not OPENROUTER_API_KEY
+    and engine in [
+        "Omnicore RAG",
+        "OpenAi-GPT",
+        "Product-R&D-Omni",
+        "Product-Optimizations-Omni",
+        "Omnicore_Finance"
+    ]
+):
+    st.sidebar.error("❌ Omnicore Key Missing")
 
 st.sidebar.header("📧 Email Settings")
 
