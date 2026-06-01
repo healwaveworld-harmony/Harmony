@@ -2554,7 +2554,7 @@ def analyze_with_groq(prompt):
                         "https://api.groq.com/openai/v1/chat/completions",
                         headers=headers,
                         json={
-                            "model": model_name,
+                            "model": llama-3.1-8b-instant",
                             "messages": [{"role": "user", "content": payload_prompt}],
                             "temperature": 0.2  # Strategic, audit-safe clarity
                         },
@@ -2594,7 +2594,7 @@ def analyze_with_groq(prompt):
                     "https://api.groq.com/openai/v1/chat/completions",
                     headers=headers,
                     json={
-                        "model": "llama-3.1-8b-instant",
+                        "model": "openai/gpt-oss-20b",
                         "messages": [{"role": "user", "content": payload_prompt}]
                     },
                     timeout=120,
