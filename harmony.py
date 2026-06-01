@@ -2524,27 +2524,30 @@ def log_chat(user_id, model_used, model_selected, message):
 
 
     
-# === ⚡ Flashmind Groq Analyzer (Single-Stream Strategic Patch) ===
+# === ⚡ Flashmind Groq Analyzer (Resilient + Single-Analysis Patch) ===
 def analyze_with_groq(prompt):
     import streamlit as st
     import time
     import requests
 
     try:
+        # Pull API key safely from state or the original column dictionary
+        api_key = api_key_column.get('groq_key', '') if 'api_key_column' in locals() else st.session_state.get('groq_api_key', '')
+        
         headers = {
-            "Authorization": f"Bearer {st.session_state.get('groq_api_key', api_key_column.get('groq_key', ''))}",
+            "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json"
         }
 
         if not headers["Authorization"]:
-            st.warning("🔑 API key missing. Please configure it in the sidebar.")
-            return {"Analysis 1": "Error: Missing API Key"}
+            st.warning("🔑 Flashmind API key missing. Please configure it first.")
+            return {
+                "Analysis 1": "Missing API key"
+            }
 
-        # --- Prevent 'Request Entity Too Large' by truncating if necessary ---
-        # Approximating 1 token ~= 4 chars; keeping it safe under model limits
-        safe_prompt_content = prompt[:25000] 
-
-        def call_groq_model(model_name, full_prompt, timeout=90, retries=3):
+        # --- Safe model call with retry and size handling ---
+        def call_groq_model(model_name, payload_prompt, timeout=60, retries=3):
+            """Primary Groq model caller with retry logic."""
             for attempt in range(retries):
                 try:
                     res = requests.post(
@@ -2552,64 +2555,118 @@ def analyze_with_groq(prompt):
                         headers=headers,
                         json={
                             "model": model_name,
-                            "messages": [
-                                {"role": "system", "content": "You are a CFO-level Strategic Analyst. Output only high-clarity, audit-safe strategic briefings."},
-                                {"role": "user", "content": full_prompt}
-                            ],
-                            "temperature": 0.1
+                            "messages": [{"role": "user", "content": payload_prompt}],
+                            "temperature": 0.2  # Strategic, audit-safe clarity
                         },
                         timeout=timeout,
                     )
                     
-                    if res.status_code == 413:
-                        return "Error: Input text is too large for this engine."
+                    # Catch structural payload errors immediately
+                    if res.status_code == 413 or "too_large" in res.text:
+                        return "PAYLOAD_TOO_LARGE"
                         
                     data = res.json()
-                    if "choices" in data:
+
+                    if "choices" in data and data["choices"]:
                         return data["choices"][0]["message"]["content"].strip()
                     elif "error" in data and "rate_limit" in str(data["error"]).lower():
-                        time.sleep(15 * (attempt + 1))
+                        wait_time = 20 * (attempt + 1)
+                        st.info(f"⚙️ Optimized engine busy... waiting {wait_time}s.")
+                        time.sleep(wait_time)
                         continue
                     else:
-                        raise ValueError(f"API Error: {data.get('error', 'Unknown error')}")
+                        raise ValueError(f"Invalid Groq output: {data}")
+
                 except Exception as e:
                     if attempt < retries - 1:
-                        time.sleep(3)
+                        st.warning(f"Retry {attempt + 1}/{retries} due to: {e}")
+                        time.sleep(5)
                         continue
-                    return None
+                    else:
+                        st.error(f"Model {model_name} failed after all retries.")
+                        return None
 
-        # --- Unified Strategic Prompt ---
-        unified_prompt = f"""STRATEGIC INPUT:
-{safe_prompt_content}
+        # --- Fallback handler ---
+        def call_fallback_model(payload_prompt):
+            """Final rescue fallback using a highly stable model."""
+            try:
+                res = requests.post(
+                    "https://api.groq.com/openai/v1/chat/completions",
+                    headers=headers,
+                    json={
+                        "model": "llama-3.1-8b-instant",
+                        "messages": [{"role": "user", "content": payload_prompt}]
+                    },
+                    timeout=120,
+                )
+                data = res.json()
+                if "choices" in data and data["choices"]:
+                    st.success("✅ Fallback engine recovered successfully.")
+                    return data["choices"][0]["message"]["content"].strip()
+                return "All engines failed to produce output due to system size constraints."
+            except Exception as e:
+                return f"Error: All models failed. {e}"
 
-TASKS:
-1. SYNTHESIZED INSIGHTS: Integrate data into quantified matrix solutions.
-2. RECOMMENDED ACTIONS: Prioritize practical, implementable steps.
-3. 2026 STRATEGIC VIEW: Align with 2026 market trends and risks.
-4. USER VS DOER: Compare viewpoints for alignment/conflict.
-5. EXECUTIVE SUMMARY: High-clarity briefing for Board-level review.
+        # --- Detailed Unified Prompt ---
+        detailed_prompt = f"""{prompt}
 
-RULES:
-- Professional, neutral tone.
-- Max 3 lines per paragraph.
-- Use Markdown tables for comparisons."""
+SYSTEM INSTRUCTIONS:
+Provide a single, comprehensive STRATEGIC ANALYSIS following this exact structure:
 
-        st.info("🧠 Generating Comprehensive Analysis...")
+1. SYNTHESIZED INSIGHTS
+   - Integrate deep market findings and quantified data points.
+   - Highlight critical converging and diverging observations.
+
+2. RECOMMENDED ACTIONS
+   - Clearly prioritized actions with practical, implementable steps.
+
+3. 2026-ALIGNED STRATEGIC VIEW
+   - Key trends relevant to 2026, risks, and strategic implications.
+
+4. USER VS DOER PERSPECTIVES
+   - Explicit comparison of viewpoints and areas of alignment/conflict.
+
+5. SUGGESTED VISUALS
+   - Recommended charts (bar, pie, trend) and tables for comparisons.
+
+6. EXECUTIVE SUMMARY
+   - Professional, audit-safe briefing suitable for Board leadership.
+
+OUTPUT RULES:
+- Use numbered headings.
+- Maximum 3 lines per paragraph.
+- Use Markdown tables for complexity.
+- Neutral, CFO-briefing tone. No emojis."""
+
+        st.write("🧠 Generating Comprehensive Analysis...")
         
-        # Primary call
-        analysis_result = call_groq_model("groq/compound", unified_prompt)
+        # Primary execution attempt
+        final_analysis = call_groq_model("groq/compound", detailed_prompt, timeout=120)
 
-        # Fallback if primary fails
-        if not analysis_result:
-            st.warning("⚠️ Primary engine failed. Triggering Resilient Fallback...")
-            analysis_result = call_groq_model("llama-3.1-8b-instant", unified_prompt)
+        # Handle size-related failures seamlessly by truncating input 
+        if final_analysis == "PAYLOAD_TOO_LARGE":
+            st.warning("⚠️ Input context too large for primary engine. Compressing text and running fallback...")
+            # Slicing the raw user input text safely to about ~18,000 characters to protect system limits
+            truncated_base = prompt[:18000] + "\n\n[...Text truncated due to source volume constraints...]"
+            
+            # Reconstruct the system package prompt with smaller footprint
+            compressed_prompt = f"{truncated_base}\n\nExecute standard 6-part Strategic Analysis with 2026-Aligned View."
+            final_analysis = call_fallback_model(compressed_prompt)
+
+        # Fallback for generic connectivity drops or empty tokens
+        elif not final_analysis:
+            st.warning("⚠️ Primary analysis dropped. Switching to stable fallback...")
+            final_analysis = call_fallback_model(detailed_prompt)
 
         return {
-            "Analysis 1": analysis_result if analysis_result else "All engines failed to process this request."
+            "Analysis 1": final_analysis
         }
 
     except Exception as e:
-        return {"Analysis 1": f"❌ Analysis System Error: {str(e)}"}
+        st.error(f"❌ Flashmind Analysis server issue: {e}")
+        return {
+            "Analysis 1": f"Error generating analysis: {str(e)}"
+        }
         
 ANALYSIS_FALLBACK_MODELS = [ 
     "openai/gpt-oss-120b:free",
