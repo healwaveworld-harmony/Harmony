@@ -2858,7 +2858,7 @@ def analyze_with_groq_market_analysis(m_prompt):
                         "https://api.groq.com/openai/v1/chat/completions",
                         headers=headers,
                         json={
-                            "model": model_name,
+                            "model": "openai/gpt-oss-20b",
                             "messages": [{"role": "user", "content": payload_prompt}],
                             "temperature": 0.1
                         },
