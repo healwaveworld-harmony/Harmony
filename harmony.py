@@ -3592,6 +3592,8 @@ def analyze_with_openrouter_fin(f_prompt, perspective="user"):
     """
 
     import streamlit as st
+    import requests
+    import time
 
     perspective = str(perspective).lower()
 
@@ -3599,7 +3601,11 @@ def analyze_with_openrouter_fin(f_prompt, perspective="user"):
     ONLINE_FINANCE_PROMPT_DOER = """You are a professional financial analyst. Analyze the following balance sheet or income statement from a Doer perspective. Provide actionable recommendations, operational improvements, and steps to optimize liquidity, profitability, and solvency. Use headings, subheadings, and simple tables."""
 
     financial_prompt = ONLINE_FINANCE_PROMPT_DOER if perspective == "doer" else ONLINE_FINANCE_PROMPT_USER
-    input_text = financial_prompt + "\n\n" + f_prompt
+    
+    # --- Pre-emptive Context Window Optimization ---
+    # Cuts payload to prevent 413 or multi-model context ceiling drops
+    safe_f_prompt = f_prompt[:18000] if len(f_prompt) > 18000 else f_prompt
+    input_text = financial_prompt + "\n\n" + safe_f_prompt
 
     # --- Primary OpenRouter Models ---
     openrouter_models = {
@@ -3611,19 +3617,33 @@ def analyze_with_openrouter_fin(f_prompt, perspective="user"):
     fallback_models = [
         "nvidia/nemotron-nano-12b-v2-vl:free",
         "meta-llama/llama-3.2-3b-instruct:free"
-    ]
+    }
+
+    # --- Secure State Key Alignment ---
+    # Prevents KeyError exceptions by dynamically mapping your explicit state setup
+    openrouter_key = st.session_state.get('openrouter_api_key', '')
+    
+    if not openrouter_key:
+        api_keys = st.session_state.get('api_key_column', {})
+        openrouter_key = api_keys.get('openrouter', api_keys.get('openrouter_fin', ''))
 
     headers = {
-        "Authorization": f"Bearer {api_key_column.get('openrouter_fin', '')}",
-        "Content-Type": "application/json"
+        "Authorization": f"Bearer {openrouter_key}",
+        "Content-Type": "application/json",
+        "HTTP-Referer": "http://localhost",
+        "X-Title": "Financial Analyzer"
     }
     url = "https://openrouter.ai/api/v1/chat/completions"
 
     combined_response = ""
 
-    if not headers["Authorization"].strip():
-        st.warning(" Omnicore key not provided. Falling back to offline model...")
-        return analyze_with_qwen(f_prompt, perspective)
+    # Check key presence cleanly
+    if not openrouter_key or not str(openrouter_key).strip():
+        st.warning("Omnicore key not provided. Falling back to offline model...")
+        if 'analyze_with_qwen' in globals():
+            return analyze_with_qwen(f_prompt, perspective)
+        else:
+            return "Analysis failed. API key is missing and offline recovery is unavailable."
 
     try:
         # --- Step 1: Run primary models ---
@@ -3636,6 +3656,14 @@ def analyze_with_openrouter_fin(f_prompt, perspective="user"):
                     "max_tokens": 4000
                 }
                 res = requests.post(url, headers=headers, json=payload, timeout=200)
+                
+                # Dynamic payload rescue context if 413 error returns
+                if res.status_code == 413:
+                    st.warning(f"⚠️ Context dense for {label}. Compressing footprint...")
+                    optimized_prompt = financial_prompt + "\n\n" + f_prompt[:10000]
+                    payload["messages"] = [{"role": "user", "content": optimized_prompt}]
+                    res = requests.post(url, headers=headers, json=payload, timeout=200)
+
                 data = res.json()
                 output = data.get("choices", [{}])[0].get("message", {}).get("content", "")
                 if not output.strip():
@@ -3644,7 +3672,9 @@ def analyze_with_openrouter_fin(f_prompt, perspective="user"):
 
             except Exception as inner_e:
                 st.warning(f"{label} failed: {inner_e}. Trying fallback financial model...")
+                
                 # --- Step 2: Fallback to first available financial model ---
+                fallback_success = False
                 for fallback_model in fallback_models:
                     try:
                         fallback_payload = {
@@ -3656,24 +3686,36 @@ def analyze_with_openrouter_fin(f_prompt, perspective="user"):
                         fallback_res = requests.post(url, headers=headers, json=fallback_payload, timeout=200)
                         fallback_data = fallback_res.json()
                         fallback_output = fallback_data.get("choices", [{}])[0].get("message", {}).get("content", "")
+                        
                         if fallback_output.strip():
                             combined_response += f"\n\n--- {label} (Fallback) RESPONSE ---\n{fallback_output.strip()}"
+                            fallback_success = True
                             break
                     except Exception as fb_e:
                         st.warning(f"Fallback model {fallback_model} also failed: {fb_e}")
+                
+                if not fallback_success:
+                    combined_response += f"\n\n--- {label} RESPONSE ---\n[Execution track dropped. Content recovery failed via this channel.]"
 
         # --- Step 3: Chart rendering ---
         try:
-            render_charts_from_ai_output(combined_response)
+            if 'render_charts_from_ai_output' in globals() and combined_response.strip():
+                render_charts_from_ai_output(combined_response)
         except Exception as e:
             st.warning(f"Chart rendering skipped (finance): {e}")
+
+        if not combined_response.strip():
+            raise RuntimeError("All configured online financial processing models returned empty values.")
 
         st.session_state.result = combined_response.strip()
         return combined_response.strip()
 
     except Exception as e:
         st.warning(f"Omnicore Analysis failed: {e}\n🧠 Falling back to offline models...")
-        return analyze_with_qwen(f_prompt, perspective)
+        if 'analyze_with_qwen' in globals():
+            return analyze_with_qwen(f_prompt, perspective)
+        else:
+            return f"Analysis execution drop error: {e}. Local fallback channel trace missing."
             
 # === Streamlit UI trigger ===
 if st.button("Render Charts from AI Output"):
