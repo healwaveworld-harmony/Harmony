@@ -1542,7 +1542,6 @@ bool(DEFAULT_BACKEND_URL)
 # =========================================================
 
 groq_ui_key = ""
-
 openrouter_ui_key = ""
 
 api_key_column = {}
@@ -1631,11 +1630,8 @@ OPENROUTER_API_KEY = api_key_column.get(
 # =========================================================
 
 st.session_state["api_key_column"] = api_key_column
-
 st.session_state["groq_api_key"] = GROQ_API_KEY
-
 st.session_state["openrouter_api_key"] = OPENROUTER_API_KEY
-
 st.session_state["backend_url"] = DEFAULT_BACKEND_URL
 
 # =========================================================
