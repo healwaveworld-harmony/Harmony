@@ -2524,10 +2524,11 @@ def log_chat(user_id, model_used, model_selected, message):
 
 
     
-# === ⚡ Flashmind Groq Analyzer (Resilient + Unified Fallback Edition) ===
+# === ⚡ Flashmind Groq Analyzer (Resilient + Unified Single-Analysis Edition) ===
 def analyze_with_groq(prompt):
     import streamlit as st
     import time
+    import requests
 
     try:
         headers = {
@@ -2545,7 +2546,7 @@ def analyze_with_groq(prompt):
 
         # --- Safe model call with retry ---
         def call_groq_model(model_name, prompt, timeout=60, retries=3):
-            """Primary Groq model caller with retry logic (no fallback here)."""
+            """Primary Groq model caller with retry logic."""
             for attempt in range(retries):
                 try:
                     res = requests.post(
@@ -2553,7 +2554,8 @@ def analyze_with_groq(prompt):
                         headers=headers,
                         json={
                             "model": model_name,
-                            "messages": [{"role": "user", "content": prompt}]
+                            "messages": [{"role": "user", "content": prompt}],
+                            "temperature": 0.2  # Lower temperature for strategic audit-safe clarity
                         },
                         timeout=timeout,
                     )
@@ -2563,7 +2565,7 @@ def analyze_with_groq(prompt):
                         return data["choices"][0]["message"]["content"].strip()
                     elif "error" in data and "rate_limit" in str(data["error"]).lower():
                         wait_time = 20 * (attempt + 1)
-                        st.info(f"⚙️ Optimized engine generating response... waiting {wait_time}s.")
+                        st.info(f"⚙️ Optimized engine busy... waiting {wait_time}s.")
                         time.sleep(wait_time)
                         continue
                     else:
@@ -2577,26 +2579,17 @@ def analyze_with_groq(prompt):
                     else:
                         st.error(f"Model {model_name} failed after all retries.")
                         return None
-        
-        # ============================================================
-        # ✅ Unified fallback handler using ONLY TWO MODELS
-        # ============================================================
-        FALLBACK_MODELS = [
-            "llama-3.1-8b-instant",
-            "meta-llama/llama-prompt-guard-2-86m",
-            "openai/gpt-oss-20b",
-            "openai/gpt-oss-120b"
-        ]
 
-        # --- Fallback handler (triggered only at the end) ---
+        # --- Fallback handler ---
         def call_fallback_model(prompt):
-            """Final rescue fallback: OpenAI GPT-OSS-20B."""
+            """Final rescue fallback."""
             try:
+                # Using the first stable model from your fallback list
                 res = requests.post(
                     "https://api.groq.com/openai/v1/chat/completions",
                     headers=headers,
                     json={
-                        "model": FALLBACK_MODELS,
+                        "model": "llama-3.1-8b-instant",
                         "messages": [{"role": "user", "content": prompt}]
                     },
                     timeout=120,
@@ -2605,93 +2598,64 @@ def analyze_with_groq(prompt):
                 if "choices" in data and data["choices"]:
                     st.success("✅ Fallback engine recovered successfully.")
                     return data["choices"][0]["message"]["content"].strip()
-                else:
-                    st.error("Fallback model returned empty output.")
-                    return "All engines failed to produce output."
+                return "All engines failed to produce output."
             except Exception as e:
-                st.error(f"❌ Fallback model also failed: {e}")
-                return "Error: All models failed to generate output."
+                return f"Error: All models failed. {e}"
 
-        # --- Step 1: Run Analysis 1 ---
-        st.write("🧠 Running Analysis 1 ..")
-        out1 = call_groq_model("groq/compound-mini", prompt, timeout=90)
+        # --- Detailed Unified Prompt ---
+        # This combines your summary requirements into the single analysis step
+        detailed_prompt = f"""{prompt}
 
-        # --- Step 2: Run Analysis 2 ---
-        st.write("🧩 Running Analysis 2 ...")
-        out2 = call_groq_model("llama-3.1-8b-instant", prompt, timeout=90)
+SYSTEM INSTRUCTIONS:
+Provide a single, comprehensive STRATEGIC ANALYSIS following this exact structure:
 
-        # --- Step 3: Create blended summary ---
-        blend_prompt = f"""Here are two analyses of the same market data:
+1. SYNTHESIZED INSIGHTS
+   - Integrate deep market findings and quantified data points.
+   - Highlight critical converging and diverging observations.
 
-Analysis 1:
-{out1 or '[Analysis 1 failed]'}
+2. RECOMMENDED ACTIONS
+   - Clearly prioritized actions with practical, implementable steps.
 
-Analysis 2:
-{out2 or '[Analysis 2 failed]'}
+3. 2026-ALIGNED STRATEGIC VIEW
+   - Key trends relevant to 2026, risks, and strategic implications.
 
-1. SYNTHESIZED INSIGHTS  
-   - Integrate findings from Analysis 1 and Analysis 2  
-   - Highlight converging and diverging observations  
+4. USER VS DOER PERSPECTIVES
+   - Explicit comparison of viewpoints and areas of alignment/conflict.
 
-2. RECOMMENDED ACTIONS  
-   - Clearly prioritized actions  
-   - Practical and implementable steps  
+5. SUGGESTED VISUALS
+   - Recommended charts (bar, pie, trend) and tables for comparisons.
 
-3. 2026-ALIGNED STRATEGIC VIEW  
-   - Key trends relevant to 2026  
-   - Risks, opportunities, and strategic implications  
-
-4. USER VS DOER PERSPECTIVES  
-   - Explicit comparison of viewpoints  
-   - Areas of alignment and conflict  
-
-5. SUGGESTED VISUALS  
-   - Recommended charts (bar, pie, trend)  
-   - Tables for comparisons or contributions  
-
-6. EXECUTIVE SUMMARY  
-   - Professional, structured summary  
-   - Suitable for Board, audit, or leadership review  
+6. EXECUTIVE SUMMARY
+   - Professional, audit-safe briefing suitable for Board leadership.
 
 OUTPUT RULES:
-- Use numbered headings and clear sections  
-- Short paragraphs with spacing (maximum 3 lines)  
-- Use tables where comparison adds clarity  
-- Neutral, analyst / CFO briefing tone  
-- No emojis or casual language  
-- High clarity with audit-safe wording."""
+- Use numbered headings.
+- Maximum 3 lines per paragraph.
+- Use Markdown tables for complexity.
+- Neutral, CFO-briefing tone. No emojis."""
+
+        st.write("🧠 Generating Comprehensive Analysis...")
         
-        st.caption("Synthesizing optimized Flashmind summary...")
-        summary = call_groq_model("groq/compound", blend_prompt, timeout=90)
+        # Primary call using your high-tier model
+        final_analysis = call_groq_model("groq/compound", detailed_prompt, timeout=120)
 
-        # --- Step 4: Final fallback decision ---
-        if not out1 and not out2 and not summary:
-            st.warning("⚠️ All Groq analyses failed. Switching to fallback engine...")
-            final_output = call_fallback_model(prompt)
-            return {
-                "Analysis 1": "Fallback engine used.",
-                "Analysis 2": "",
-                "Summary": final_output
-            }
+        # Fallback if primary fails
+        if not final_analysis:
+            st.warning("⚠️ Primary analysis failed. Switching to fallback...")
+            final_analysis = call_fallback_model(detailed_prompt)
 
-        if not summary:
-            st.warning("Summary failed — generating fallback summary...")
-            summary = call_fallback_model(blend_prompt)
-
-        # --- Step 5: Return final result ---
         return {
-            "Analysis 1": (out1 or "Failed to generate Analysis 1").strip(),
-            "Analysis 2": (out2 or "Failed to generate Analysis 2").strip(),
-            "Summary": summary.strip()
+            "Analysis 1": final_analysis,
+            "Analysis 2": "",
+            "Summary": ""
         }
 
     except Exception as e:
         st.error(f"❌ Flashmind Analysis server issue: {e}")
-        # Last-resort fallback
         return {
-            "Analysis 1": "Error generating Analysis 1",
-            "Analysis 2": "Error generating Analysis 2",
-            "Summary": call_fallback_model(prompt)
+            "Analysis 1": "Error generating analysis.",
+            "Analysis 2": "",
+            "Summary": ""
         }
         
 ANALYSIS_FALLBACK_MODELS = [ 
