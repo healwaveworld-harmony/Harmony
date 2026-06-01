@@ -2822,195 +2822,157 @@ OUTPUT RULES:
 
 import streamlit as st
 
-
-# === Groq Market Analysis Analyzer ===
+# === ⚡ Groq Market Analysis Analyzer (Fully Synchronized Patch) ===
 def analyze_with_groq_market_analysis(m_prompt):
     """
-    Generates a detailed Market Analysis report using Flashmind models.
-    Optimized to generate a single robust report using the primary model, falling back
-    to others only if necessary. 
+    Generates a single, robust Market Analysis report using Flashmind models.
+    Fully integrated with global script keys and protected against context overflows.
     """
-
-    # --- Get API Key ---
-    api_keys = globals().get('api_key_column', st.session_state.get('api_key_column', {}))
-    groq_market_key = api_keys.get('groq_market', "")
-    
-    if not groq_market_key:
-        st.warning("⚠️ Flashmind API key is missing. Please enter your Flashmind API key to proceed.")
-        return "Missing Flashmind Market API key."
-
-    headers = {
-        "Authorization": f"Bearer {groq_market_key}",
-        "Content-Type": "application/json"
-    }
-
-    # --- STRICTLY USER DEFINED MODELS ---
-    # Optimized Strategy: Use gpt-oss-120b first. If it works, stop. If not, try next.
-    groq_models = [
-        "openai/gpt-oss-120b",   # Primary (Fast & Effective)
-        "groq/compound-mini",     # Secondary
-        "openai/gpt-oss-20b",     # Fallback 1
-        "llama-3.1-8b-instant"     # Fallback 2
-    ]
-    
-    responses = []
-
-    def call_groq_model(model_name, prompt, timeout=60):
-        try:
-            res = requests.post(
-                "https://api.groq.com/openai/v1/chat/completions",
-                headers=headers,
-                json={"model": model_name, "messages": [{"role": "user", "content": prompt}]},
-                timeout=timeout
-            )
-            if res.status_code != 200:
-                return None # Trigger fallback
-                
-            data = res.json()
-            if "choices" not in data or not data["choices"]:
-                return None
-            return data["choices"][0]["message"]["content"]
-        except Exception:
-            return None
+    import streamlit as st
+    import time
+    import requests
 
     try:
+        # Pulling dynamically from the identical state key your layout script establishes
+        groq_market_key = st.session_state.get('groq_api_key', '')
+        
+        # Cross-check backup via the api_key_column object if session state hasn't flushed yet
+        if not groq_market_key:
+            api_keys = st.session_state.get('api_key_column', {})
+            groq_market_key = api_keys.get('groq_key', '')
+
+        if not groq_market_key:
+            st.warning("⚠️ Flashmind API key is missing. Please enter your Flashmind API key to proceed.")
+            return "Missing Flashmind Market API key."
+
+        headers = {
+            "Authorization": f"Bearer {groq_market_key}",
+            "Content-Type": "application/json"
+        }
+
+        # --- Safe single model caller with payload protection ---
+        def call_groq_model(model_name, payload_prompt, timeout=90, retries=2):
+            for attempt in range(retries):
+                try:
+                    res = requests.post(
+                        "https://api.groq.com/openai/v1/chat/completions",
+                        headers=headers,
+                        json={
+                            "model": model_name,
+                            "messages": [{"role": "user", "content": payload_prompt}],
+                            "temperature": 0.1
+                        },
+                        timeout=timeout
+                    )
+                    
+                    if res.status_code == 413 or "too_large" in res.text:
+                        return "PAYLOAD_TOO_LARGE"
+                        
+                    if res.status_code != 200:
+                        continue
+                        
+                    data = res.json()
+                    if "choices" in data and data["choices"]:
+                        return data["choices"][0]["message"]["content"].strip()
+                except Exception:
+                    if attempt < retries - 1:
+                        time.sleep(3)
+                    continue
+            return None
+
+        # --- Prevention of Context Overflows ---
+        # Slicing raw data to ~18,000 characters to leave ample room for system rules
+        safe_market_input = m_prompt[:18000]
+
+        # --- Integrated Single-Stream Master Prompt ---
+        market_master_prompt = f"""{safe_market_input}
+
+TASK OBJECTIVE:
+Refine the provided inputs into a single Consolidated Market Analysis Summary suitable for executive, Board, and audit review.
+
+DELIVERABLE REQUIREMENTS:
+1. STRUCTURED CONSOLIDATION
+   - Synthesize market observations into a coherent narrative highlighting material insights.
+2. ACTIONABLE RECOMMENDATIONS
+   - Present clearly prioritized and implementable recommendations linked directly to data.
+3. PERSPECTIVE SEPARATION
+   - Distinctly separate and label: 'a. User Perspective' and 'b. Doer Perspective' explaining trade-offs.
+4. VISUAL REPRESENTATION (TEXT-BASED)
+   - Include clear Markdown data tables with explicit numeric or percentage values for trend reference.
+5. AUTHORITATIVE CONTEXT (2026)
+   - Reference credible market insights aligned explicitly to current 2026 structural conditions.
+
+OUTPUT RULES:
+- Use numbered headings and clearly defined sections.
+- Keep paragraphs concise (maximum 3 lines each).
+- Maintain a neutral Analyst / CFO briefing tone. No emojis or casual language.
+- Use precise, audit-safe wording."""
+
         st.info("📊 Running Flashmind Market Analysis...")
 
-        # --- Step 1: Run Primary Model (with Fallback) ---
-        # Optimization: We loop through models but BREAK after the first success.
-        model_used_label = ""
-        
-        for idx, model in enumerate(groq_models, start=1):
-            
-            # Generic display name to hide backend details
-            display_name = f"Flashmind Model {idx}"
-            status_msg = f"Optimizing {display_name}..."
+        # Run Primary high-depth endpoint
+        final_report_content = call_groq_model("groq/compound", market_master_prompt)
 
-            with st.spinner(status_msg):
-                response_text = call_groq_model(model, m_prompt)
-                
-                if response_text:
-                    # Success! Store result and STOP trying other models.
-                    responses.append((display_name, response_text.strip()))
-                    model_used_label = display_name
-                    break  # <--- CRITICAL: Ensures only ONE model report is generated
+        # Truncation safety logic if it triggers payload blockages
+        if final_report_content == "PAYLOAD_TOO_LARGE":
+            st.warning("⚠️ Input volume too dense for primary engine. Compressing and rerunning via fallback channel...")
+            compressed_input = m_prompt[:12000] + "\n\n[...Data optimized due to source scale volume...]"
+            compact_prompt = f"{compressed_input}\n\nGenerate standard 5-part Consolidated Market Analysis with 2026 Context."
+            final_report_content = call_groq_model("llama-3.1-8b-instant", compact_prompt)
+
+        # General failure path: Drop immediately to rapid recovery fallback
+        elif not final_report_content:
+            st.warning("⚠️ Primary engine connection dropped. Switching to stable fallback...")
+            final_report_content = call_groq_model("llama-3.1-8b-instant", market_master_prompt)
+
+        if not final_report_content:
+            return "All Flashmind analyses failed to generate output."
+
+        # --- Fetch References ---
+        refs_md = ""
+        try:
+            if 'get_references' in globals():
+                refs = get_references(m_prompt, online_mode=True)
+                if refs:
+                    for r in refs:
+                        if isinstance(r, dict) and "url" in r and "title" in r:
+                            refs_md += f"- [{r['title']}]({r['url']})\n"
+                        else:
+                            refs_md += f"- {r}\n"
                 else:
-                    # Silently continue to next model if this one fails
-                    continue
+                    refs_md = "No specific references found."
+            else:
+                refs_md = "Reference module not loaded."
+        except Exception:
+            refs_md = "References unavailable."
 
-        # --- Step 2: Synthesis / Formatting ---
-        if responses:
-            # Prepare the single report for formatting
-            combined_text = "\n\n".join([f"=== {label} ===\n{text}" for label, text in responses])
-            
-            blend_prompt = f"""Here is a raw Market Analysis:
+        # --- Single Consolidated Document Construction ---
+        full_report = f"""# 📄 Final Consolidated Market Analysis Summary
 
-{combined_text}
-
-TASK OBJECTIVE
-
-Refine the provided inputs into a **Final Consolidated Market Analysis Summary**
-suitable for executive, Board, and audit review.
-
-DELIVERABLE REQUIREMENTS
-
-1. STRUCTURED CONSOLIDATION  
-   - Synthesize all provided analyses into a single, coherent narrative  
-   - Highlight the most material insights and conclusions  
-
-2. ACTIONABLE RECOMMENDATIONS  
-   - Present clearly prioritized and implementable recommendations  
-   - Link each recommendation to observed market insights or data  
-
-3. PERSPECTIVE SEPARATION  
-   - Distinctly separate and label:
-     a. User Perspective  
-     b. Doer Perspective  
-   - Clearly explain differences, trade-offs, and areas of alignment  
-
-4. VISUAL REPRESENTATION (TEXT-BASED)  
-   - Include Bar or Pie chart representations using:
-     - Markdown data tables, or  
-     - Clear textual chart descriptions suitable for rendering  
-   - Ensure numeric or percentage values are provided where charts are suggested  
-
-5. AUTHORITATIVE CONTEXT (2025)  
-   - Reference credible, authoritative insights relevant to the year 2025  
-   - Contextualize references to support conclusions and recommendations  
-
-OUTPUT RULES
-
-- Use numbered headings and clearly defined sections  
-- Keep paragraphs concise (maximum 3 lines each)  
-- Use tables where comparisons or distributions improve clarity  
-- Maintain a neutral Analyst / CFO briefing tone  
-- No emojis, no casual language, no model identifiers  
-- Use precise, audit-safe wording suitable for regulatory and leadership review  
-"""
-            
-            final_summary = "Summary generation failed."
-            
-            # --- Synthesizing Summary ---
-            with st.spinner("Synthesizing Flashmind Market Report..."):
-                # Use the same priority list for the summarizer
-                for model in groq_models:
-                    temp_summary = call_groq_model(model, blend_prompt)
-                    if temp_summary:
-                        final_summary = temp_summary
-                        break
-
-            # --- Step 3: Fetch References ---
-            refs_md = ""
-            try:
-                if 'get_references' in globals():
-                    refs = get_references(m_prompt, online_mode=True)
-                    if refs:
-                        for r in refs:
-                            if isinstance(r, dict) and "url" in r and "title" in r:
-                                refs_md += f"- [{r['title']}]({r['url']})\n"
-                            else:
-                                refs_md += f"- {r}\n"
-                    else:
-                        refs_md = "No specific references found."
-                else:
-                    refs_md = "Reference module not loaded."
-            except Exception:
-                refs_md = "References unavailable."
-
-            # --- Step 4: Combine all in one box ---
-            full_report = f"""
-# 📌 Analysis Report
-
-{combined_text}
-
-# 📄 Final Consolidated Market Analysis Summary
-
-{final_summary}
+{final_report_content}
 
 # 🔗 References
 
 {refs_md}
 """
 
-            st.subheader("📄 Market Analysis Report")
-            st.text_area(
-                label="Complete Report",
-                value=full_report,
-                height=800,
-                max_chars=None,
-                key="market_analysis_report"
-            )
+        # --- UI Rendering Output Block ---
+        st.subheader("📄 Market Analysis Report")
+        st.text_area(
+            label="Complete Report Output",
+            value=full_report.strip(),
+            height=600,
+            key="market_analysis_report"
+        )
 
-            # --- Step 5: Render charts ---
-            try:
-                if 'render_charts_from_ai_output' in globals():
-                    render_charts_from_ai_output(final_summary)
-            except Exception:
-                pass
+        # --- Optional Chart Parsing Engine Hook ---
+        try:
+            if 'render_charts_from_ai_output' in globals():
+                render_charts_from_ai_output(final_report_content)
+        except Exception:
+            pass
 
-            return full_report.strip()
-
-        return "All Flashmind analyses failed."
+        return full_report.strip()
 
     except Exception as e:
         st.error(f"Flashmind Analysis failed: {e}")
@@ -3577,7 +3539,6 @@ ENGINEERING QUERY:
     except Exception as e:
         st.error(f"Unexpected error in DeepSeek analysis: {e}")
         return "Analysis failed. Please retry later."
-
 
 
 def analyze_with_openrouter_fin(f_prompt, perspective="user"):
