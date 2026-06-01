@@ -3610,12 +3610,12 @@ def analyze_with_openrouter_fin(f_prompt, perspective="user"):
     # --- Primary OpenRouter Models ---
     openrouter_models = {
         "Analysis 1": "openai/gpt-oss-20b:free",
-        "Analysis 2": "mistralai/mistral-7b-instruct:free"
+        "Analysis 2": "google/gemma-4-26b-a4b-it:free"
     }
 
     # --- Recommended fallback financial models ---
     fallback_models = [
-        "nvidia/nemotron-nano-12b-v2-vl:free",
+        "openai/gpt-oss-120b:free",
         "meta-llama/llama-3.2-3b-instruct:free"
     ]
 
@@ -3739,13 +3739,7 @@ if st.button("🔍 Run Analysis"):
         )
 
         # === Engine Dispatcher ===
-        if engine_type == "Offline":
-            result = analyze_with_offline(prompt, offline_choice)
-        elif engine_type == "Qwen-fin":
-            result = analyze_with_qwen(f_prompt, user_priority)    
-        elif engine_type == "Offline RAG":
-            result = analyze_with_offline_rag(prompt)
-        elif engine_type == "Flashmind RAG":
+        if engine_type == "Flashmind RAG":
             result = analyze_with_groq(prompt)
         elif engine_type == "Omnicore RAG":
             result = analyze_with_openrouter(prompt)
