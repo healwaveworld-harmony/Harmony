@@ -1511,7 +1511,7 @@ DEFAULT_BACKEND_URL = st.secrets.get(
 
 # =========================================================
 
-# DEBUG
+# DEBUG PANEL
 
 # =========================================================
 
@@ -1556,11 +1556,8 @@ engine = engine_type
 # =========================================================
 
 if engine in [
-
 "Flashmind RAG",
-
 "Flashmind Market"
-
 ]:
 
 groq_ui_key = st.sidebar.text_input(
@@ -1582,17 +1579,11 @@ api_key_column["groq_key"] = (
 # =========================================================
 
 elif engine in [
-
 "Omnicore RAG",
-
 "OpenAi-GPT",
-
 "Product-R&D-Omni",
-
 "Product-Optimizations-Omni",
-
 "Omnicore_Finance"
-
 ]:
 
 openrouter_ui_key = st.sidebar.text_input(
@@ -1617,7 +1608,6 @@ else:
 
 api_key_column = {}
 
-
 # =========================================================
 
 # FINAL RESOLVED KEYS
@@ -1641,6 +1631,10 @@ OPENROUTER_API_KEY = api_key_column.get(
 # =========================================================
 
 st.session_state["api_key_column"] = api_key_column
+
+st.session_state["groq_api_key"] = GROQ_API_KEY
+
+st.session_state["openrouter_api_key"] = OPENROUTER_API_KEY
 
 st.session_state["backend_url"] = DEFAULT_BACKEND_URL
 
@@ -1667,7 +1661,7 @@ else:
         "❌ Flashmind Key Missing"
     )
 
-if engine in [
+elif engine in [
 "Omnicore RAG",
 "OpenAi-GPT",
 "Product-R&D-Omni",
@@ -1686,6 +1680,15 @@ else:
     st.sidebar.error(
         "❌ Omnicore Key Missing"
     )
+
+
+# =========================================================
+
+# BACKWARD COMPATIBILITY VARIABLES
+
+# =========================================================
+
+BACKEND_URL = DEFAULT_BACKEND_URL
 
 
 st.sidebar.header("📧 Email Settings")
