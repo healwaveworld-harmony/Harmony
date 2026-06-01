@@ -2695,9 +2695,10 @@ OUTPUT RULES:
         }
         
 ANALYSIS_FALLBACK_MODELS = [ 
+    "openai/gpt-oss-120b:free",
     "openai/gpt-oss-20b:free",
     "deepseek/deepseek-r1-distill-llama-70b:free",
-    "meta-llama/llama-3.2-3b-instruct:free",
+    "meta-llama/Llama 3.3 70B Instruct (free)",
     "nvidia/nemotron-nano-12b-v2-vl:free",
     "nvidia/nemotron-nano-9b-v2:free",
     "x-ai/grok-4.1-fast:free"
