@@ -3502,9 +3502,10 @@ ENGINEERING QUERY:
 
         # ------------ FALLBACK LIST (same as Gemini) ------------
         ANALYSIS_FALLBACK_MODELS = [
-            "qwen/qwen3-next-80b-a3b-instruct:free",
-            "deepseek/deepseek-r1-distill-llama-70b:free",
             "openai/gpt-oss-120b:free",
+            "meta-llama/llama-3.2-3b-instruct:free",
+            "openai/gpt-oss-20b:free",
+            "qwen/qwen3-coder:free",
             "nvidia/nemotron-nano-12b-v2-vl:free",
             "google/gemma-4-31b-it:free",
             "x-ai/grok-4.1-fast:free"
