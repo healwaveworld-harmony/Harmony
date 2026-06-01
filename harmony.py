@@ -3617,10 +3617,10 @@ def analyze_with_openrouter_fin(f_prompt, perspective="user"):
     fallback_models = [
         "nvidia/nemotron-nano-12b-v2-vl:free",
         "meta-llama/llama-3.2-3b-instruct:free"
-    }
+    ]
 
     # --- Secure State Key Alignment ---
-    # Prevents KeyError exceptions by dynamically mapping your explicit state setup
+    # FIXED: Carefully closed brackets and parentheses to eliminate SyntaxError
     openrouter_key = st.session_state.get('openrouter_api_key', '')
     
     if not openrouter_key:
