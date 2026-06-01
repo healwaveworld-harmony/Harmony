@@ -1471,9 +1471,6 @@ import streamlit as st
 engine_type = st.sidebar.selectbox(
     "🧠 Choose AI Engine",
     [
-        "Offline",
-        "Qwen-fin",
-        "Offline RAG",
         "Flashmind RAG",
         "Omnicore RAG",
         "Flashmind Market",
