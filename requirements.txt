@@ -33,7 +33,6 @@ pdf2image
 matplotlib
 plotly
 fpdf2
-reportlab
 requests
 torch 
 torchvision 
