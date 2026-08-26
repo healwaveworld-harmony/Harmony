@@ -1300,17 +1300,16 @@ from docx import Document
 from pdf2image import convert_from_path
 import pandas as pd 
 
-import cv2
 import numpy as np
 from PIL import Image
 import streamlit as st
 
 def ocr_image(img):
     try:
-        # 1. [INTACT] Convert PIL Image to a NumPy array
+        import cv2
+
         img_np = np.array(img)
 
-        # 2. [FIXED] Universal channel handling (Prevents crash on grayscale/RGBA)
         if len(img_np.shape) == 2:
             img_cv = img_np
         elif img_np.shape[-1] == 4:
@@ -1318,33 +1317,45 @@ def ocr_image(img):
         else:
             img_cv = cv2.cvtColor(img_np, cv2.COLOR_RGB2GRAY)
 
-        # 3. [INTACT] Apply adaptive thresholding to remove noise
         img_cv = cv2.adaptiveThreshold(
-            img_cv, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-            cv2.THRESH_BINARY, 31, 2
+            img_cv,
+            255,
+            cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+            cv2.THRESH_BINARY,
+            31,
+            2
         )
 
-        # 4. [INTACT] Resize for improved OCR accuracy
-        img_cv = cv2.resize(img_cv, (1200, 1600), interpolation=cv2.INTER_CUBIC)
+        img_cv = cv2.resize(
+            img_cv,
+            (1200, 1600),
+            interpolation=cv2.INTER_CUBIC
+        )
 
-        # 5. [IMPROVED] Use image_to_data for 90%+ Table Accuracy
-        # This keeps columns aligned. We still use your custom_config.
         custom_config = r'--oem 3 --psm 6'
-        data = pytesseract.image_to_data(img_cv, config=custom_config, output_type=pytesseract.Output.DATAFRAME)
 
-        # 6. [NEW] Filter out low-confidence noise (Cleans up the "|" and "i" artifacts)
+        data = pytesseract.image_to_data(
+            img_cv,
+            config=custom_config,
+            output_type=pytesseract.Output.DATAFRAME
+        )
+
         df = data[data.conf > 10].dropna()
-        
-        # 7. [NEW] Reconstruct lines to maintain table structure
+
         if not df.empty:
-            lines = df.groupby('line_num')['text'].apply(lambda x: ' '.join(x)).tolist()
+            lines = (
+                df.groupby('line_num')['text']
+                .apply(lambda x: ' '.join(x))
+                .tolist()
+            )
             text = "\n".join(lines)
         else:
-            # Fallback to your original string method if grouping fails
             processed_img = Image.fromarray(img_cv)
-            text = pytesseract.image_to_string(processed_img, config=custom_config)
+            text = pytesseract.image_to_string(
+                processed_img,
+                config=custom_config
+            )
 
-        # 8. [INTACT] Clean up extra spaces
         text = " ".join(text.split())
 
         return text
