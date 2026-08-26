@@ -17,7 +17,7 @@ tensorboard
 tinyaes
 pandas
 pytesseract
-numpy
+numpy==1.26.4
 scikit-image
 shapely
 pyclipper
@@ -38,5 +38,5 @@ torch
 torchvision 
 torchaudio 
 ultralytics
-opencv-python-headless
+opencv-python-headless==4.10.0.84
 
