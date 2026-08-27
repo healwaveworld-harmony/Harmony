@@ -1815,7 +1815,7 @@ def build_f_prompt(user_comment, doer_comment, final_input, model_type, user_pri
             "6. Valuation Analysis – intrinsic value (DCF, comparable company analysis) with investment insights.\n"
             "7. Qualitative & Contextual Insights – MD&A, industry/economic factors, risk assessment, notes/disclosures.\n"
             "8. Forward-Looking Guidance – forecasts, projections, and actionable recommendations for operational improvements.\n"
-            "9. Suggestions & Recommendations (latest-2025) for Major Changes – highlight critical areas needing attention.\n"
+            "9. Suggestions & Recommendations (latest-2026) for Major Changes – highlight critical areas needing attention.\n"
             "10. Visual Aids & Data Visualization – propose tables, charts, and dashboards for clarity.\n\n"
             "Use headings, subheadings, bullet points, numeric examples, and tables. "
             "Ensure clarity, depth, and actionable insights.\n\n"
@@ -1839,7 +1839,7 @@ def build_f_prompt(user_comment, doer_comment, final_input, model_type, user_pri
             "6. Valuation Analysis – intrinsic value (DCF, comparable company analysis) with strategic insights.\n"
             "7. Qualitative & Contextual Insights – MD&A, industry/economic factors, risk assessment, notes/disclosures.\n"
             "8. Forward-Looking Guidance – projections and actionable recommendations for strategic decision-making.\n"
-            "9. Suggestions & Recommendations for Major Changes (latest-2025) – highlight critical areas needing attention.\n"
+            "9. Suggestions & Recommendations for Major Changes (latest-2026) – highlight critical areas needing attention.\n"
             "10. Visual Aids & Data Visualization – propose tables, charts, and dashboards to enhance comprehension.\n\n"
             "Use headings, subheadings, bullet points, numeric examples, and tables. "
             "Ensure clarity, depth, and actionable insights.\n\n"
@@ -1866,7 +1866,7 @@ def build_prompt(user, doer, input_text, model, prio, online_mode: bool = True):
     refs_md = "\n".join([f"- [{url}]({url})" for url in refs])
 
     definition_section = f"""
-Definition of **{input_text}** with authoritative insights (focus on 2025 strategies):
+Definition of **{input_text}** with authoritative insights (focus on 2026 strategies):
 
 References (auto-expand with text/images if available):  
 {refs_md}
@@ -1892,7 +1892,7 @@ SCOPE & DEPTH REQUIREMENTS (MANDATORY)
   - Engineering principles (design, manufacturing, validation, lifecycle)
 - Quantify impacts wherever possible
 - Link technical failures to **business, safety, and financial consequences**
-- Use **2025–2026 industry practices only**
+- Use **2026–2026 industry practices only**
 
 
 DELIVERABLE STRUCTURE (STRICT)
@@ -2764,7 +2764,7 @@ The summary must include the following sections:
 
 1. KEY INSIGHTS  
    - Critical observations derived from the analysis  
-   - Supporting data points and examples relevant to 2024–2025  
+   - Supporting data points and examples relevant to 2025–2026  
 
 2. RECOMMENDED ACTION POINTS  
    - Clearly defined, practical, and prioritized actions  
@@ -3853,7 +3853,7 @@ st.markdown(
         Harmony-GPT can make mistakes.<br>
         Powered by Retrieval-augmented generation (RAG)
         Designed under patent theory by owner. (Kindly read consents & readme before using) <br>
-        ("Contact 📱 : whatsapp chat ✔ 8383995759")   
+        ("Contact 📱 : whatsapp chat ✔ 9560300666")   
     </div>
     """,
     unsafe_allow_html=True
