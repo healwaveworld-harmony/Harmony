@@ -1,4 +1,4 @@
-# 📑 Harmony Partner – User Guide
+# 📑 Harmony BI&A – User Guide
 
 Welcome to *Harmony Business Intelligence V12*  
 Your all-in-one AI Management & Strategy Analytics.
