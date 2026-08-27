@@ -539,7 +539,7 @@ if not st.session_state.consent_accepted:
     st.markdown("""
     # 🧠 Harmony Business Intelligence
 
-    Welcome to Harmony AI.
+    Welcome to Harmony Business Intelligence and Analytics.
 
     Please review and accept the Terms & Conditions before continuing.
 
@@ -654,7 +654,7 @@ with col2:
 # === SHOW HELP CONTENT WHEN CLICKED ===
 if st.session_state.get("show_help", False):
     st.markdown("---")
-    st.markdown("## 📖 Harmony Assistant Help / README")
+    st.markdown("## 📖 Harmony Analytics Help / README")
     st.markdown(read_readme(), unsafe_allow_html=True)
     if st.button("Close Help"):
         st.session_state["show_help"] = False
@@ -715,7 +715,7 @@ st.markdown(
     <div style='background-color:white; padding:12px; border-radius:8px; text-align:center; margin-bottom:15px;'>
         <h2 style='color:#32CD32; margin:0;'>Harmony-GPT</h2>
         <p style='color:#FFFFFF; font-size:14px; margin:0;'>
-            💡 All-in-one Management Assistant, designed under patent Arjit's theory for 
+            💡 All-in-one Business Intelligence and Analytics, designed under patent Arjit's theory for 
             Quantified matrix solution, your refined strategies are just one ping away. <br>
             Under patent theory – powered with RAG & advanced engines <br>
             Designed in India (Vocal for Local) 🇮🇳 <br>
