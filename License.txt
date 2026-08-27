@@ -1,5 +1,5 @@
-Harmony AI Desktop
-Copyright (c) 2025 Harmony
+Harmony BI&A
+Copyright (c) 2026 Harmony
 
 Licensed under the Apache License, Version 2.0 (the "License")
 
@@ -14,8 +14,8 @@ Let's create a Harmony in your management and project strategies with your probl
         6. AI-generated suggestions are not legal or medical advice.
         7. All disputes are to be handled in Jurisdiction: Gurugram Court, India.
 
-© 2025 All Rights Reserved.
+© 2026 All Rights Reserved.
         Harmony-GPT can make mistakes.
         Powered by Retrieval-augmented generation (RAG)
         Designed under patent(The patent act-1970 India) theory by owner. (Kindly read consents & readme before using) <br>
-        ("Contact 📱 : whatsapp chat ✔ 8383995759")
+        ("Contact 📱 : whatsapp chat ✔ 9560300666")
