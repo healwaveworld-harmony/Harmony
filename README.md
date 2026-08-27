@@ -1,16 +1,16 @@
 # 📑 Harmony Partner – User Guide
 
-Welcome to *Harmony Assistant V1.0*  
-Your all-in-one AI Management & Strategy Assistant.
+Welcome to *Harmony Business Intelligence V12*  
+Your all-in-one AI Management & Strategy Analytics.
 
 ---
 
 🚀 *Getting Started*
 
-1). Access control is managed externally by AWS or your hosting layer.
-2). Harmony starts directly after AWS grants access; there is no internal sign-in screen or activation workflow.
-3). Review and accept the acknowledgement checkbox before using the workspace.
-4). Configure AI/API keys and email delivery settings from the sidebar when needed.
+1). All the logins with Demo, User or Instituitions are managed by Owner. 
+2). Harmony starts directly after consent signing.
+3). Review from website and accept the acknowledgement checkbox before using the workspace.
+4). All things are preloaded, configure AI/API keys and email delivery settings from the sidebar when needed.
 
 
 ---
@@ -29,7 +29,7 @@ Your all-in-one AI Management & Strategy Assistant.
 - Flashmind  
 - Omnicore (ZDR enabled for data privacy)
 
-Offline Models & fallback: *LLaMA-3 / Qwen / Gemma (& custom selection for numerous model)*
+Offline Models & fallback: *LLaMA-3 / Qwen / Gemma (& custom selection for numerous model) for downloaded application only*
 
 🧩 Problem-Solving Methods
 Select a method to analyze your challenges:
@@ -51,7 +51,7 @@ business_engines = [
     "Enables targeted Market Research and Analysis.",
 
     "c) Omnicore RAG (detailed) Analysis + Offline LLaMA-3 → "
-    "Provides Manufacturing insights, CNC advanced technicals, and operational intelligence.",
+    "Provides Manufacturing insights, CNC advanced technical, and operational intelligence.",
 
     "d) RAG-based Engines → "
     "Offers Management Guidance & Reasoning with full support for SWOT, DMAIC, and Six-Sigma problem-solving frameworks.",
@@ -64,7 +64,7 @@ business_engines = [
     "Research and analysis similar to advanced GPT, Gemini, Groq, or Perplexity (Omnicore Engine, User Defined Problem Method). "
     "Provides user-defined solutions with sales and marketing insights (Omnicore Key).",
 
-    "g) Offline Models & Installation → "
+    "g) Offline Models & Installation of Desktop Applicationj→ "
     "To keep our software light, offline models are optional. "
     "If required, install and download core RAG models and custom models for individual usage, make sure ollama is installed."
 ]
@@ -95,7 +95,7 @@ Quantified solutions , Latest industry examples, Contribution % of problems anal
 
 📑 *Reports*
 
-Download beautifully structured reports in PDF or Word — complete with charts, insights, and recommendations.If the option isn’t visible, simply switch engines. Your latest saved report will always be ready.
+Download beautifully structured reports in PDF or Word — complete with charts, insights, and recommendations. If the option isn’t visible, simply switch engines. Your latest saved report will always be ready.
 Send reports instantly using your configured email or the default system in left side bar.
 For custom delivery, connect your email via SMTP or API and save your settings before sending.
  
@@ -108,4 +108,4 @@ For custom delivery, connect your email via SMTP or API and save your settings b
 - Dual perspectives (User vs. Doer)  
 - RAG-based reasoning  
 
-*Website:* [https://https://harmony-business-ai.xyz/](https://https://harmony-business-ai.xyz/) or whatsapp us at 8383995759 or Call at 9560300666.
+*Website:* [https://harmony-business-ai.xyz/](https://harmony-business-ai.xyz/) E:info@harmony-business-ai.xyz or WhatsApp us at 9560300666 or Call at 8178341107/9560300666.
