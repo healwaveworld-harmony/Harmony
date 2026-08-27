@@ -523,7 +523,7 @@ from pathlib import Path
 # === Page Config ===
 
 st.set_page_config(
-    page_title="🧠 Harmony Strategic Assistant",
+    page_title="🧠 Harmony Business Intelligence",
     layout="wide"
 )
 
@@ -537,7 +537,7 @@ if "consent_accepted" not in st.session_state:
 if not st.session_state.consent_accepted:
 
     st.markdown("""
-    # 🧠 Harmony Strategic Assistant
+    # 🧠 Harmony Business Intelligence
 
     Welcome to Harmony AI.
 
@@ -645,7 +645,7 @@ st.markdown(
 # === HEADER WITH CUSTOM HELP BUTTON ===
 col1, col2 = st.columns([6, 1])
 with col1:
-    st.title("Harmony Strategic Assistant V1.1")
+    st.title("Harmony Business Intelligence V12")
 with col2:
     if st.button("❓ Help"):
         st.session_state["show_help"] = True
