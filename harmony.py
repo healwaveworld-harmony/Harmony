@@ -2801,11 +2801,11 @@ def analyze_with_openrouter(prompt, stream=False):
 
         # === Step 1: Run Analysis 1 ===
         st.write("🧠 Optimized engine-Omnicore generating Analysis 1...")
-        out1 = call_openrouter("google/gemma-3-4b-it", prompt, stream=stream)
+        out1 = call_openrouter("nvidia/nemotron-3-super-120b-a12b:free", prompt, stream=stream)
 
         # === Step 2: Run Analysis 2 ===
         st.write("🧩 Optimized engine-Omnicore generating Analysis 2...")
-        out2 = call_openrouter("deepseek/deepseek-r1-distill-llama-70b", prompt, stream=stream)
+        out2 = call_openrouter("openai/gpt-oss-20b", prompt, stream=stream)
 
         # === Step 3: Combine Outputs ===
         blend_prompt = f"""Here are two AI responses to the same input prompt.
@@ -3576,7 +3576,7 @@ ENGINEERING QUERY:
 
         # ------------ FALLBACK LIST (same as Gemini) ------------
         ANALYSIS_FALLBACK_MODELS = [
-            "google/gemma-4-26b-a4b-it:free",
+            "nvidia/nemotron-3-super-120b-a12b:free",
             "deepseek/deepseek-v4-flash:free",
             "qwen/qwen3-embedding-8b",
             "qwen/qwen3-30b-a3b-instruct-2507",
