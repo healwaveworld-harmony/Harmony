@@ -3300,7 +3300,7 @@ def analyze_with_gemini(tool_prompt):
 
         # ========== FALLBACK MODELS ==========
         ANALYSIS_FALLBACK_MODELS = [
-            "google/gemma-4-26b-a4b-it:free",   Primary
+            "google/gemma-4-26b-a4b-it:free",     #PRIMARY
             "nvidia/llama-nemotron-embed-vl-1b-v2:free",
             "google/gemma-4-31b-it:free",
             "nvidia/nemotron-3-ultra-550b-a55b:free",
