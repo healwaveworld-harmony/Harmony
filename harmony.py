@@ -1,55 +1,112 @@
-# streamlit_app.py
+# =========================
+# STREAMLIT
+# =========================
 import streamlit as st
-import socket, sys, platform
+
+# =========================
+# PYTHON STANDARD LIBRARY
+# =========================
+import socket
+import sys
+import platform
 import datetime
 import subprocess
-import uuid, io
-from io import BytesIO
-import re, hashlib
-import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-from pydantic import BaseModel
-import json, os, pathlib
-import requests #for calling Google Custom Search API
-import pandas as pd
-from typing import Tuple
+import uuid
+import io
+import re
+import hashlib
+import json
+import os
+import pathlib
 import traceback
-from pathlib import Path
-from fpdf import FPDF
-from docx import Document
-from reportlab.platypus import SimpleDocTemplate, Paragraph
-from reportlab.lib.styles import getSampleStyleSheet
-import google.generativeai as genai
-import openai
 import shutil
 import base64
-import time 
-start_time = time.time() 
-import threading, getpass
-from io import BytesIO
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.cidfonts import UnicodeCIDFont
-pdfmetrics.registerFont(UnicodeCIDFont('HeiseiKakuGo-W5'))  # Japanese font but supports emoji
-from matplotlib import font_manager as fm
-import os
-import builtins  # add at top of file
-import pytesseract
-import matplotlib.font_manager as fm
-import sys
-import io
-import platform
+import time
+import threading
+import getpass
+import builtins
 import logging
-from pathlib import Path
 import tempfile
 import gzip
-import json
-from pathlib import Path
-import requests
-import re
 import smtplib
 import mimetypes
+import sqlite3
+
+from io import BytesIO
+from pathlib import Path
+from typing import Tuple
 from email.message import EmailMessage
+
+
+# =========================
+# DATA / VALIDATION
+# =========================
+import pandas as pd
+from pydantic import BaseModel
+
+
+# =========================
+# HTTP / API
+# =========================
+import requests
+
+
+# =========================
+# CHARTS
+# =========================
+import matplotlib
+
+# Non-GUI backend for Streamlit/server environments
+matplotlib.use("Agg")
+
+import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
+
+
+# =========================
+# PDF / DOCUMENT GENERATION
+# =========================
+from fpdf import FPDF
+
+from docx import Document
+
+from reportlab.platypus import (
+    SimpleDocTemplate,
+    Paragraph
+)
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.cidfonts import UnicodeCIDFont
+
+
+# =========================
+# AI / LLM
+# =========================
+import google.generativeai as genai
+import openai
+
+
+# =========================
+# OCR
+# =========================
+import pytesseract
+
+
+# =========================
+# PDF FONT
+# =========================
+pdfmetrics.registerFont(
+    UnicodeCIDFont("HeiseiKakuGo-W5")
+)
+
+# =========================
+# PERFORMANCE TIMER
+# =========================
+start_time = time.time()
+
+# =========================
+# SECURITY / DATABASE
+# =========================
 import sqlite3
 import bcrypt
 
@@ -2677,13 +2734,13 @@ OUTPUT RULES:
         }
         
 ANALYSIS_FALLBACK_MODELS = [ 
-    "openai/gpt-oss-120b:free",
-    "openai/gpt-oss-20b:free",
-    "deepseek/deepseek-r1-distill-llama-70b:free",
-    "meta-llama/Llama 3.3 70B Instruct (free)",
-    "nvidia/nemotron-nano-12b-v2-vl:free",
-    "nvidia/nemotron-nano-9b-v2:free",
-    "x-ai/grok-4.1-fast:free"
+    "google/gemma-4-26b-a4b-it:free",
+    "nvidia/llama-nemotron-embed-vl-1b-v2:free",
+    "google/gemma-4-31b-it:free",
+    "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "openai/gpt-oss-20b",
+    "deepseek/deepseek-v4-flash-latest",
+    "anthropic/claude-3-haiku"
 ]
 
 def analyze_with_openrouter(prompt, stream=False): 
@@ -2997,12 +3054,13 @@ import streamlit as st
 # INTERNAL OMNICORE FALLBACK MODELS (HIDDEN)
 # =====================================================
 ANALYSIS_FALLBACK_MODELS = [
-    "openai/gpt-oss-20b:free",
-    "qwen/qwen3-next-80b-a3b-instruct:free",
-    "deepseek/deepseek-r1-distill-llama-70b:free",
-    "meta-llama/llama-3.2-3b-instruct:free",
-    "nvidia/nemotron-nano-12b-v2-vl:free",
-    "nvidia/nemotron-nano-9b-v2:free"
+    "google/gemma-4-26b-a4b-it:free",
+    "nvidia/llama-nemotron-embed-vl-1b-v2:free",
+    "google/gemma-4-31b-it:free",
+    "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "openai/gpt-oss-20b",
+    "deepseek/deepseek-v4-flash-latest",
+    "anthropic/claude-3-haiku"
 ]
 
 # =====================================================
@@ -3157,13 +3215,13 @@ def analyze_with_openai(o_prompt):
 
     
 ANALYSIS_FALLBACK_MODELS = [ 
-    "openai/gpt-oss-20b:free",
-    "openai/gpt-oss-120b:free",
-    "deepseek/deepseek-r1-distill-llama-70b:free",
-    "meta-llama/llama-3.2-3b-instruct:free",
-    "qwen/qwen3-next-80b-a3b-instruct:free",
+    "google/gemma-4-26b-a4b-it:free",
+    "nvidia/llama-nemotron-embed-vl-1b-v2:free",
     "google/gemma-4-31b-it:free",
-    "x-ai/grok-4.1-fast:free"
+    "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "openai/gpt-oss-20b",
+    "deepseek/deepseek-v4-flash-latest",
+    "qwen/qwen3-30b-a3b-instruct-2507"
 ]
 
 def build_tool_prompt(user_comment, doer_comment, final_input, focus="engineering_tool_design"):
@@ -3242,12 +3300,13 @@ def analyze_with_gemini(tool_prompt):
 
         # ========== FALLBACK MODELS ==========
         ANALYSIS_FALLBACK_MODELS = [
-            "openai/gpt-oss-120b:free",              # primary
-            "deepseek/deepseek-r1-distill-llama-70b:free",
-            "openai/gpt-oss-20b:free",
-            "nvidia/nemotron-nano-12b-v2-vl:free",
+            "google/gemma-4-26b-a4b-it:free",   Primary
+            "nvidia/llama-nemotron-embed-vl-1b-v2:free",
             "google/gemma-4-31b-it:free",
-            "x-ai/grok-4.1-fast:free"
+            "nvidia/nemotron-3-ultra-550b-a55b:free",
+            "openai/gpt-oss-20b",
+            "deepseek/deepseek-v4-flash-latest",
+            "qwen/qwen3-30b-a3b-instruct-2507"
         ]
 
         # ------------ REQUEST FUNCTION ------------
@@ -3513,13 +3572,13 @@ ENGINEERING QUERY:
 
         # ------------ FALLBACK LIST (same as Gemini) ------------
         ANALYSIS_FALLBACK_MODELS = [
-            "openai/gpt-oss-120b:free",
-            "meta-llama/llama-3.2-3b-instruct:free",
-            "openai/gpt-oss-20b:free",
-            "qwen/qwen3-coder:free",
-            "nvidia/nemotron-nano-12b-v2-vl:free",
+            "google/gemma-4-26b-a4b-it:free",
+            "nvidia/llama-nemotron-embed-vl-1b-v2:free",
             "google/gemma-4-31b-it:free",
-            "x-ai/grok-4.1-fast:free"
+            "nvidia/nemotron-3-ultra-550b-a55b:free",
+            "openai/gpt-oss-20b",
+            "deepseek/deepseek-v4-flash-latest",
+            "anthropic/claude-3-haiku"
         ]
 
         # ------------ REQUEST FUNCTION (same as Gemini) ------------
@@ -3620,14 +3679,14 @@ def analyze_with_openrouter_fin(f_prompt, perspective="user"):
 
     # --- Primary OpenRouter Models ---
     openrouter_models = {
-        "Analysis 1": "openai/gpt-oss-20b:free",
+        "Analysis 1": "google/gemma-4-31b-it:free",
         "Analysis 2": "google/gemma-4-26b-a4b-it:free"
     }
 
     # --- Recommended fallback financial models ---
     fallback_models = [
-        "openai/gpt-oss-120b:free",
-        "meta-llama/llama-3.2-3b-instruct:free"
+        "nvidia/nemotron-3-embed-1b:free",
+        "nvidia/llama-nemotron-embed-vl-1b-v2:free"
     ]
 
     # --- Secure State Key Alignment ---
