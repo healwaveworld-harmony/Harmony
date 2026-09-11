@@ -2619,7 +2619,7 @@ def analyze_with_groq(prompt):
                         "https://api.groq.com/openai/v1/chat/completions",
                         headers=headers,
                         json={
-                            "model": "llama-3.3-70b-versatile",
+                            "model": "openai/gpt-oss-20b",
                             "messages": [{"role": "user", "content": payload_prompt}],
                             "temperature": 0.2  # Strategic, audit-safe clarity
                         },
