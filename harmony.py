@@ -2735,8 +2735,8 @@ OUTPUT RULES:
         
 ANALYSIS_FALLBACK_MODELS = [ 
     "google/gemma-4-26b-a4b-it:free",
-    "nvidia/llama-nemotron-embed-vl-1b-v2:free",
-    "google/gemma-4-31b-it:free",
+    "qwen/qwen3-embedding-8b",
+    "qwen/qwen3-30b-a3b-instruct-2507",
     "nvidia/nemotron-3-ultra-550b-a55b:free",
     "openai/gpt-oss-20b",
     "deepseek/deepseek-v4-flash-latest",
@@ -3055,8 +3055,8 @@ import streamlit as st
 # =====================================================
 ANALYSIS_FALLBACK_MODELS = [
     "google/gemma-4-26b-a4b-it:free",
-    "nvidia/llama-nemotron-embed-vl-1b-v2:free",
-    "google/gemma-4-31b-it:free",
+    "qwen/qwen3-embedding-8b",
+    "qwen/qwen3-30b-a3b-instruct-2507",
     "nvidia/nemotron-3-ultra-550b-a55b:free",
     "openai/gpt-oss-20b",
     "deepseek/deepseek-v4-flash-latest",
@@ -3216,12 +3216,12 @@ def analyze_with_openai(o_prompt):
     
 ANALYSIS_FALLBACK_MODELS = [ 
     "google/gemma-4-26b-a4b-it:free",
-    "nvidia/llama-nemotron-embed-vl-1b-v2:free",
-    "google/gemma-4-31b-it:free",
+    "qwen/qwen3-embedding-8b",
+    "qwen/qwen3-30b-a3b-instruct-2507",
     "nvidia/nemotron-3-ultra-550b-a55b:free",
     "openai/gpt-oss-20b",
     "deepseek/deepseek-v4-flash-latest",
-    "qwen/qwen3-30b-a3b-instruct-2507"
+    "anthropic/claude-3-haiku"
 ]
 
 def build_tool_prompt(user_comment, doer_comment, final_input, focus="engineering_tool_design"):
@@ -3573,8 +3573,8 @@ ENGINEERING QUERY:
         # ------------ FALLBACK LIST (same as Gemini) ------------
         ANALYSIS_FALLBACK_MODELS = [
             "google/gemma-4-26b-a4b-it:free",
-            "nvidia/llama-nemotron-embed-vl-1b-v2:free",
-            "google/gemma-4-31b-it:free",
+            "qwen/qwen3-embedding-8b",
+            "qwen/qwen3-30b-a3b-instruct-2507",
             "nvidia/nemotron-3-ultra-550b-a55b:free",
             "openai/gpt-oss-20b",
             "deepseek/deepseek-v4-flash-latest",
