@@ -2735,11 +2735,12 @@ OUTPUT RULES:
         
 ANALYSIS_FALLBACK_MODELS = [ 
     "google/gemma-4-26b-a4b-it:free",
+    "deepseek/deepseek-v4-flash:free",
     "qwen/qwen3-embedding-8b",
     "qwen/qwen3-30b-a3b-instruct-2507",
     "nvidia/nemotron-3-ultra-550b-a55b:free",
     "openai/gpt-oss-20b",
-    "deepseek/deepseek-v4-flash-latest",
+    "google/gemini-3.1-flash-lite",
     "anthropic/claude-3-haiku"
 ]
 
@@ -3055,11 +3056,12 @@ import streamlit as st
 # =====================================================
 ANALYSIS_FALLBACK_MODELS = [
     "google/gemma-4-26b-a4b-it:free",
+    "deepseek/deepseek-v4-flash:free",
     "qwen/qwen3-embedding-8b",
     "qwen/qwen3-30b-a3b-instruct-2507",
     "nvidia/nemotron-3-ultra-550b-a55b:free",
     "openai/gpt-oss-20b",
-    "deepseek/deepseek-v4-flash-latest",
+    "google/gemini-3.1-flash-lite",
     "anthropic/claude-3-haiku"
 ]
 
@@ -3216,11 +3218,12 @@ def analyze_with_openai(o_prompt):
     
 ANALYSIS_FALLBACK_MODELS = [ 
     "google/gemma-4-26b-a4b-it:free",
+    "deepseek/deepseek-v4-flash:free",
     "qwen/qwen3-embedding-8b",
     "qwen/qwen3-30b-a3b-instruct-2507",
     "nvidia/nemotron-3-ultra-550b-a55b:free",
     "openai/gpt-oss-20b",
-    "deepseek/deepseek-v4-flash-latest",
+    "google/gemini-3.1-flash-lite",
     "anthropic/claude-3-haiku"
 ]
 
@@ -3300,13 +3303,14 @@ def analyze_with_gemini(tool_prompt):
 
         # ========== FALLBACK MODELS ==========
         ANALYSIS_FALLBACK_MODELS = [
-            "google/gemma-4-26b-a4b-it:free",     #PRIMARY
-            "nvidia/llama-nemotron-embed-vl-1b-v2:free",
-            "google/gemma-4-31b-it:free",
+            "google/gemma-4-26b-a4b-it:free",
+            "deepseek/deepseek-v4-flash:free",
+            "qwen/qwen3-embedding-8b",
+            "qwen/qwen3-30b-a3b-instruct-2507",
             "nvidia/nemotron-3-ultra-550b-a55b:free",
             "openai/gpt-oss-20b",
-            "deepseek/deepseek-v4-flash-latest",
-            "qwen/qwen3-30b-a3b-instruct-2507"
+            "google/gemini-3.1-flash-lite",
+            "anthropic/claude-3-haiku"
         ]
 
         # ------------ REQUEST FUNCTION ------------
@@ -3573,11 +3577,12 @@ ENGINEERING QUERY:
         # ------------ FALLBACK LIST (same as Gemini) ------------
         ANALYSIS_FALLBACK_MODELS = [
             "google/gemma-4-26b-a4b-it:free",
+            "deepseek/deepseek-v4-flash:free",
             "qwen/qwen3-embedding-8b",
             "qwen/qwen3-30b-a3b-instruct-2507",
             "nvidia/nemotron-3-ultra-550b-a55b:free",
             "openai/gpt-oss-20b",
-            "deepseek/deepseek-v4-flash-latest",
+            "google/gemini-3.1-flash-lite",
             "anthropic/claude-3-haiku"
         ]
 
