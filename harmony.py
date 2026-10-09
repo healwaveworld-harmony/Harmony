@@ -2734,7 +2734,7 @@ OUTPUT RULES:
         }
         
 ANALYSIS_FALLBACK_MODELS = [ 
-    "nvidia/nemotron-3-super-120b-a12b:free",
+    "nnvidia/nemotron-3-super-120b-a12b:free",
     "thinkingmachines/inkling-small:free",
     "qwen/qwen3-embedding-8b",
     "qwen/qwen3-30b-a3b-instruct-2507",
@@ -2801,7 +2801,7 @@ def analyze_with_openrouter(prompt, stream=False):
 
         # === Step 1: Run Analysis 1 ===
         st.write("🧠 Optimized engine-Omnicore generating Analysis 1...")
-        out1 = call_openrouter("nvidia/nemotron-3-super-120b-a12b:free", prompt, stream=stream)
+        out1 = call_openrouter("google/gemma-4-31b-it:free", prompt, stream=stream)
 
         # === Step 2: Run Analysis 2 ===
         st.write("🧩 Optimized engine-Omnicore generating Analysis 2...")
