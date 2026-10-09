@@ -2801,7 +2801,7 @@ def analyze_with_openrouter(prompt, stream=False):
 
         # === Step 1: Run Analysis 1 ===
         st.write("🧠 Optimized engine-Omnicore generating Analysis 1...")
-        out1 = call_openrouter("google/gemma-4-31b-it:free", prompt, stream=stream)
+        out1 = call_openrouter("qwen/qwen3-32b", prompt, stream=stream)
 
         # === Step 2: Run Analysis 2 ===
         st.write("🧩 Optimized engine-Omnicore generating Analysis 2...")
