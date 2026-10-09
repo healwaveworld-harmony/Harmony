@@ -2801,7 +2801,7 @@ def analyze_with_openrouter(prompt, stream=False):
 
         # === Step 1: Run Analysis 1 ===
         st.write("🧠 Optimized engine-Omnicore generating Analysis 1...")
-        out1 = call_openrouter("deepseek/deepseek-v3.2", prompt, stream=stream)
+        out1 = call_openrouter("deepseek/deepseek-v4.1-flash", prompt, stream=stream)
 
         # === Step 2: Run Analysis 2 ===
         st.write("🧩 Optimized engine-Omnicore generating Analysis 2...")
