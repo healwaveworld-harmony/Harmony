@@ -2849,7 +2849,7 @@ OUTPUT RULES:
 - High clarity with audit-safe wording."""
 
         st.write("🧩 Synthesizing final optimized summary...")
-        combined_summary = call_openrouter("meta-llama/llama-3.1-8b-instruct", blend_prompt, stream=stream, timeout=90)
+        combined_summary = call_openrouter("google/gemma-4-26b-a4b-it", blend_prompt, stream=stream, timeout=90)
 
         # === Step 4: Display ===
         full_output = f"""**Analysis 1:**\n{out1}\n\n
