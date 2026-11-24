@@ -2734,10 +2734,10 @@ OUTPUT RULES:
         }
         
 ANALYSIS_FALLBACK_MODELS = [ 
-    "nnvidia/nemotron-3-super-120b-a12b:free",
-    "thinkingmachines/inkling-small:free",
-    "qwen/qwen3-embedding-8b",
-    "qwen/qwen3-30b-a3b-instruct-2507",
+    "openai/gpt-oss-20b",
+    "deepseek/deepseek-v4.1-flash",
+    "qwen/qwen3.5-flash-02-23",
+    "qwen/qwen3.8-omni-flash",
     "nvidia/nemotron-3-ultra-550b-a55b:free",
     "openai/gpt-oss-20b",
     "google/gemini-3.1-flash-lite",
