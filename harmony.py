@@ -3247,18 +3247,18 @@ Doer Context:
 Focus Area: {focus}
 
 Provide a full detailed analysis latest 2026 including:
-- Tool design and Pattern Making / Tooling & strategy
-- Raw Material & Casting Machine selection, Moulding Section, machinery requirements, capacities
-- Melting & Pouring, composition, Shakeout + Fettling, strengths, properties
-- Heat Treatment Section, CNC Machining Line Setup with pre and finish machining
-- Balancing Cell, FFT / NVH Validation Lab, Surface Treatment Line, Inspection & QC Section, Packing & Storage
+- Tool design and Pattern Making / Tooling & strategy, part specific suggestions and examples with use case.
+- Raw Material & Casting Machine selection, Moulding Section, machinery requirements, capacities, part specific suggestions and examples with use case.
+- Melting & Pouring, composition, Shakeout + Fettling, strengths, properties, part specific suggestions and examples with use case.
+- Heat Treatment Section, CNC Machining Line Setup with pre and finish machining, part specific suggestions and examples with use case.
+- Balancing Cell, FFT / NVH Validation Lab, Surface Treatment Line, Inspection & QC Section, Packing & Storage suggestions and examples with use case.
 - Categories, types, variants, classifications
 - Working principle and operating mechanism
-- Setup requirements, cost insights, process optimization, Safety, durability and performance considerations
-- Sales Strategies, Customer requirements and marketing related information in detail 
-- Recommended Plant Layout (Area Wise), Manpower Requirement, Industrial setup, plant layout, production flow
-- Technologies involved, advanced methods, automation options with recommended companies. 
-- Competition, market comparisons, innovation opportunities and names of companies. 
+- Setup requirements, cost insights, process optimization, Safety, durability and performance considerations suggestions and examples with use case.
+- Sales Strategies, Customer requirements and marketing related information in detail, part specific suggestions.
+- Recommended Plant Layout (Area Wise), Manpower Requirement, Industrial setup, plant layout, production flow suggestions and examples with use case.
+- Technologies involved, advanced methods, automation options with recommended companies, suggestions and examples with use case.
+- Competition, market comparisons, innovation opportunities and names of companies producing same parts. 
 
 
 Return the entire analysis in a clean, structured engineering format.
