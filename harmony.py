@@ -3055,13 +3055,12 @@ import streamlit as st
 # INTERNAL OMNICORE FALLBACK MODELS (HIDDEN)
 # =====================================================
 ANALYSIS_FALLBACK_MODELS = [
-    "google/gemma-4-26b-a4b-it:free",
+    "openai/gpt-oss-20b",
+    "google/gemini-3.1-flash-lite",
     "deepseek/deepseek-v4-flash:free",
     "qwen/qwen3-embedding-8b",
     "qwen/qwen3-30b-a3b-instruct-2507",
     "nvidia/nemotron-3-ultra-550b-a55b:free",
-    "openai/gpt-oss-20b",
-    "google/gemini-3.1-flash-lite",
     "anthropic/claude-3-haiku"
 ]
 
@@ -3303,9 +3302,8 @@ def analyze_with_gemini(tool_prompt):
 
         # ========== FALLBACK MODELS ==========
         ANALYSIS_FALLBACK_MODELS = [
-            "liquid/lfm-3-1.7b:free",
-            "google/gemma-4-26b-a4b-it:free",
             "openai/gpt-oss-20b",
+            "openai/gpt-oss-120b",
             "google/gemma-4-31b-it:free",
             "qwen/qwen3-30b-a3b-instruct-2507",
             "nvidia/nemotron-3.5-lightning:free",
@@ -3577,12 +3575,11 @@ ENGINEERING QUERY:
 
         # ------------ FALLBACK LIST (same as Gemini) ------------
         ANALYSIS_FALLBACK_MODELS = [
-            "nvidia/nemotron-3-super-120b-a12b:free",
+            "openai/gpt-oss-20b",
             "deepseek/deepseek-v4-flash:free",
             "qwen/qwen3-embedding-8b",
             "qwen/qwen3-30b-a3b-instruct-2507",
             "nvidia/nemotron-3-ultra-550b-a55b:free",
-            "openai/gpt-oss-20b",
             "google/gemini-3.1-flash-lite",
             "anthropic/claude-3-haiku"
         ]
